@@ -47,7 +47,7 @@ else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
 
-# Enable Wifi on Raspberry Pi 1 & 2
+# Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q 'net.ifnames=0' /boot/cmdline.txt; then
   echo 'Seems net.ifnames=0 parameter already set, skip this step.'
 else
@@ -59,7 +59,7 @@ echo '>>> Change Hostname to HoneyPi'
 sudo sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
 sudo bash -c "echo 'HoneyPi' > /etc/hostname"
 
-#rpi-scripts
+# rpi-scripts
 echo '>>> Install software for measurement python scripts'
 apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip || ((ERR++))
 easy_install pip
@@ -69,7 +69,7 @@ python3 -m pip install numpy
 pip3 install bme680
 pip3 install Adafruit_DHT
 
-#rpi-webinterface
+# rpi-webinterface
 echo '>>> Install software for Webinterface'
 apt-get install -y lighttpd php7.0-cgi || ((ERR++))
 lighttpd-enable-mod fastcgi fastcgi-php
@@ -78,8 +78,7 @@ service lighttpd force-reload
 echo '>>> Create www-data user'
 groupadd www-data
 usermod -G www-data -a pi
-# TODO: move files
-# set file rights
+# set file rights, but this must be set again after moving the files there
 chown -R www-data:www-data /var/www/html
 chmod -R 775 /var/www/html
 
@@ -95,7 +94,7 @@ fi
 echo '>>> Install software for Surfsticks'
 apt-get install -y usb-modeswitch || ((ERR++))
 
-#wifi
+# wifi networks
 echo '>>> Setup Wifi Configuration'
 cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 
@@ -132,7 +131,7 @@ else
   sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
 fi
 
-# Replace HoneyPi files with latest release
+# Replace HoneyPi files with latest releases
 if [ $ERR -eq 0 ]; then
   sh update.sh || ((ERR++))
 else
