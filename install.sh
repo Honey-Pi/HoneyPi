@@ -1,6 +1,6 @@
 [ -z $BASH ] && { exec bash "$0" "$@" || exit; }
 #!/bin/bash
-# file: installHoneyPi.sh
+# file: install.sh
 #
 # This script will install required software for HoneyPi.
 # It is recommended to run it in your home directory.
@@ -97,7 +97,7 @@ apt-get install -y usb-modeswitch || ((ERR++))
 
 #wifi
 echo '>>> Setup Wifi Configuration'
-#cp setupfiles/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 
 # Autostart
 echo '>>> Put Measurement Script into Autostart'
@@ -113,17 +113,17 @@ apt-get install -y dnsmasq hostapd || ((ERR++))
 systemctl stop dnsmasq
 systemctl stop hostapd
 # Configuring a static IP
-cp setupfiles/dhcpcd.conf /etc/dhcpcd.conf
+cp overlays/dhcpcd.conf /etc/dhcpcd.conf
 systemctl daemon-reload
 service dhcpcd restart
 # Configuring the DHCP server (dnsmasq)
-cp setupfiles/hostapd.conf /etc/hostapd/hostapd.conf
-cp setupfiles/hostapd /etc/default/hostapd
+cp overlays/hostapd.conf /etc/hostapd/hostapd.conf
+cp overlays/hostapd /etc/default/hostapd
 # Start it up
 systemctl start hostapd
 systemctl start dnsmasq
 # Add routing and masquerade
-cp setupfiles/sysctl.conf /etc/sysctl.conf
+cp overlays/sysctl.conf /etc/sysctl.conf
 sh -c "iptables-save > /etc/iptables.ipv4.nat"
 iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
 if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
@@ -132,40 +132,11 @@ else
   sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
 fi
 
-# install HoneyPi rpi-scripts
+# Replace HoneyPi files with latest release
 if [ $ERR -eq 0 ]; then
-  echo '>>> Install HoneyPi runtime measurement scripts'
-  rm -rf rpi-scripts # remove folder to download latest
-  if [ -d "rpi-scripts" ]; then
-    echo 'Seems HoneyPi rpi-scripts is installed already, skip this step.'
-  else
-    TAG=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-    echo ">>> Downloading rpi-scripts $TAG"
-    wget "https://github.com/Honey-Pi/rpi-scripts/archive/$TAG.zip" -O HoneyPiScripts.zip || ((ERR++))
-    unzip HoneyPiScripts.zip || ((ERR++))
-    mv $DIR/rpi-scripts-${TAG//v} $DIR/rpi-scripts
-    sleep 1
-    rm HoneyPiScripts.zip
-  fi
-fi
-
-# install HoneyPi rpi-webinterface
-if [ $ERR -eq 0 ]; then
-  echo '>>> Install HoneyPi webinterface'
-  rm -rf /var/www/html # remove folder to download latest
-  if [ -d "/var/www/html" ]; then
-    echo 'Seems HoneyPi rpi-webinterface is installed already, skip this step.'
-  else
-    TAG=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-webinterface/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-    echo ">>> Downloading rpi-webinterface $TAG"
-    wget "https://github.com/Honey-Pi/rpi-webinterface/archive/$TAG.zip" -O HoneyPiWebinterface.zip || ((ERR++))
-    unzip HoneyPiWebinterface.zip || ((ERR++))
-    mv $DIR/rpi-webinterface-${TAG//v}/dist /var/www/html
-    mv $DIR/rpi-webinterface-${TAG//v}/backend /var/www/html/backend
-    sleep 1
-    rm -rf $DIR/rpi-webinterface-${TAG//v}
-    rm HoneyPiWebinterface.zip
-  fi
+  sh update.sh || ((ERR++))
+else
+  echo '>>> Something went wrong. Updating skiped.'
 fi
 
 echo
