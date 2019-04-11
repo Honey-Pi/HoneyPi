@@ -1,12 +1,14 @@
 ## Physical install 
 ### WittyPi Pins to Raspberry Pins
 
-GPIO (BCM) | Phycial PIN 
---- | ---: 
-2 (SDA 1) | 3
-3 (SCL 1) | 5
-4 (GPIO 7) | 7
-17 (GPIO 0) | 11
+GPIO (BCM) | Name | Phycial PIN 
+--- | --- | ---: 
+2 | SDA | 3
+3 | SCL | 5
+4 | GPIO4 | 7
+17 | GPIO17 | 11
+
+> double occupancy through BME680 (SDA&SCL) and Button at GPIO17.
 
 ## Install WittyPi on Raspbian
 

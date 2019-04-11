@@ -18,38 +18,43 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # error counter
 ERR=0
 
+# sys update
+echo '>>> System update'
+apt-get update
+apt-get upgrade -y
+
 # enable I2C on Raspberry Pi
 # enable 1-Wire on Raspberry Pi
 echo '>>> Enable I2C and 1-Wire'
-if grep -q 'i2c-dev' /etc/modules; then
-  echo 'Seems i2c-dev module already exists, skip this step.'
+if grep -q '^i2c-dev' /etc/modules; then
+  echo '1 - Seems i2c-dev module already exists, skip this step.'
 else
   echo 'i2c-dev' >> /etc/modules
 fi
-if grep -q 'w1_gpio' /etc/modules; then
-  echo 'Seems w1_gpio module already exists, skip this step.'
+if grep -q '^w1_gpio' /etc/modules; then
+  echo '2 - Seems w1_gpio module already exists, skip this step.'
 else
   echo 'w1_gpio' >> /etc/modules
 fi
-if grep -q 'w1_therm' /etc/modules; then
-  echo 'Seems w1_therm module already exists, skip this step.'
+if grep -q '^w1_therm' /etc/modules; then
+  echo '3 - Seems w1_therm module already exists, skip this step.'
 else
   echo 'w1_therm' >> /etc/modules
 fi
-if grep -q 'dtoverlay=w1-gpio' /boot/config.txt; then
-  echo 'Seems w1-gpio parameter already set, skip this step.'
+if grep -q '^dtoverlay=w1-gpio' /boot/config.txt; then
+  echo '4 - Seems w1-gpio parameter already set, skip this step.'
 else
   echo 'dtoverlay=w1-gpio' >> /boot/config.txt
 fi
-if grep -q 'dtparam=i2c_arm=on' /boot/config.txt; then
-  echo 'Seems i2c_arm parameter already set, skip this step.'
+if grep -q '^dtparam=i2c_arm=on' /boot/config.txt; then
+  echo '5 - Seems i2c_arm parameter already set, skip this step.'
 else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
 
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
-if grep -q 'net.ifnames=0' /boot/cmdline.txt; then
-  echo 'Seems net.ifnames=0 parameter already set, skip this step.'
+if grep -q '^net.ifnames=0' /boot/cmdline.txt; then
+  echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
 else
   echo 'net.ifnames=0' >> /boot/cmdline.txt
 fi
@@ -61,26 +66,21 @@ sudo bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
-apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip || ((ERR++))
+apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip
 easy_install pip
 pip install thingspeak
-python3 -m pip install --upgrade pip setuptools wheel
-python3 -m pip install numpy
-pip3 install bme680
-pip3 install Adafruit_DHT
+python3 -m pip install pip setuptools wheel numpy
+pip3 install smbus bme680 Adafruit_DHT
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
-apt-get install -y lighttpd php7.0-cgi || ((ERR++))
+apt-get install -y lighttpd php7.0-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
 service lighttpd force-reload
 
 echo '>>> Create www-data user'
 groupadd www-data
 usermod -G www-data -a pi
-# set file rights, but this must be set again after moving the files there
-chown -R www-data:www-data /var/www/html
-chmod -R 775 /var/www/html
 
 # give www-data all right for shell-scripts
 echo '>>> Give shell-scripts rights'
@@ -92,7 +92,7 @@ fi
 
 # Install software for surfstick
 echo '>>> Install software for Surfsticks'
-apt-get install -y usb-modeswitch || ((ERR++))
+apt-get install -y usb-modeswitch
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
@@ -108,7 +108,7 @@ fi
 
 # AccessPoint
 echo '>>> Set Up Raspberry Pi as Access Point'
-apt-get install -y dnsmasq hostapd || ((ERR++))
+apt-get install -y dnsmasq hostapd
 systemctl stop dnsmasq
 systemctl stop hostapd
 # Configuring a static IP
@@ -126,19 +126,20 @@ cp overlays/sysctl.conf /etc/sysctl.conf
 sh -c "iptables-save > /etc/iptables.ipv4.nat"
 iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
 if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
-  echo 'Seems iptables-restore < /etc/iptables.ipv4.nat already in rc.local, skip this step.'
+  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
 else
   sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
 fi
 
+echo
 # Replace HoneyPi files with latest releases
 if [ $ERR -eq 0 ]; then
-  sh update.sh || ((ERR++))
+  sleep 10
+  sh update.sh
 else
   echo '>>> Something went wrong. Updating skiped.'
 fi
 
-echo
 if [ $ERR -eq 0 ]; then
   echo '>>> All done. Please reboot your Pi :-)'
 else
