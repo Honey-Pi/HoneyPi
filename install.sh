@@ -67,10 +67,7 @@ sudo bash -c "echo 'HoneyPi' > /etc/hostname"
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
 apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip
-easy_install pip
-pip install thingspeak
-python3 -m pip install pip setuptools wheel numpy
-pip3 install smbus bme680 Adafruit_DHT
+pip3 install thingspeak==0.4.0 setuptools wheel numpy smbus bme680 Adafruit_DHT
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
@@ -113,9 +110,12 @@ systemctl stop dnsmasq
 systemctl stop hostapd
 # Configuring a static IP
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-systemctl daemon-reload
 service dhcpcd restart
+systemctl daemon-reload
 # Configuring the DHCP server (dnsmasq)
+mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+cp overlays/dnsmasq.conf /etc/dnsmasq.conf
+# Configuring the access point host software (hostapd)
 cp overlays/hostapd.conf /etc/hostapd/hostapd.conf
 cp overlays/hostapd /etc/default/hostapd
 # Start it up
@@ -135,9 +135,15 @@ echo
 # Replace HoneyPi files with latest releases
 if [ $ERR -eq 0 ]; then
   sleep 10
-  sh update.sh
+  # waiting for internet connection
+  echo ">>> Waiting for internet connection ..."
+  while ! timeout 0.2 ping -c 1 -n api.github.com &> /dev/null
+  do
+    printf "."
+  done
+  #sh update.sh
 else
-  echo '>>> Something went wrong. Updating skiped.'
+  echo '>>> Something went wrong. Updating measurement scripts skiped.'
 fi
 
 if [ $ERR -eq 0 ]; then
