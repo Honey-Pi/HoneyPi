@@ -59,6 +59,11 @@ else
   echo 'net.ifnames=0' >> /boot/cmdline.txt
 fi
 
+# Change timezone in Debian 9 (Stretch)
+echo '>>> Change Timezone to Berlin'
+ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+dpkg-reconfigure -f noninteractive tzdata
+
 # change hostname to http://HoneyPi.local
 echo '>>> Change Hostname to HoneyPi'
 sudo sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
@@ -110,8 +115,7 @@ systemctl stop dnsmasq
 systemctl stop hostapd
 # Configuring a static IP
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-service dhcpcd restart
-systemctl daemon-reload
+service dhcpcd restart && systemctl daemon-reload
 # Configuring the DHCP server (dnsmasq)
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 cp overlays/dnsmasq.conf /etc/dnsmasq.conf

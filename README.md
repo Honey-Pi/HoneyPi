@@ -6,6 +6,8 @@ git clone https://github.com/Honey-Pi/HoneyPi.git HoneyPi
 cd HoneyPi
 sudo sh install.sh
 ```
+> It is recommended to run it in your home directory.
+
 
 # First start on a clean [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/) OS
 
