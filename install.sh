@@ -145,7 +145,7 @@ if [ $ERR -eq 0 ]; then
   do
     printf "."
   done
-  #sh update.sh
+  sh update.sh
 else
   echo '>>> Something went wrong. Updating measurement scripts skiped.'
 fi
