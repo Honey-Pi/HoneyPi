@@ -31,7 +31,7 @@ if grep -q '^i2c-dev' /etc/modules; then
 else
   echo 'i2c-dev' >> /etc/modules
 fi
-if grep -q '^w1_gpio' /etc/modules; then
+if grep -q '^w1_gpio,gpiopin=4' /etc/modules; then
   echo '2 - Seems w1_gpio module already exists, skip this step.'
 else
   echo 'w1_gpio' >> /etc/modules
@@ -41,10 +41,10 @@ if grep -q '^w1_therm' /etc/modules; then
 else
   echo 'w1_therm' >> /etc/modules
 fi
-if grep -q '^dtoverlay=w1-gpio' /boot/config.txt; then
+if grep -q '^dtoverlay=w1-gpio,gpiopin=24' /boot/config.txt; then
   echo '4 - Seems w1-gpio parameter already set, skip this step.'
 else
-  echo 'dtoverlay=w1-gpio' >> /boot/config.txt
+  echo 'dtoverlay=w1-gpio,gpiopin=24' >> /boot/config.txt
 fi
 if grep -q '^dtparam=i2c_arm=on' /boot/config.txt; then
   echo '5 - Seems i2c_arm parameter already set, skip this step.'
@@ -106,6 +106,8 @@ if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
   echo 'Seems measurement main.py already in rc.local, skip this step.'
 else
   sed -i -e '$i \(sleep 5;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
+  chmod +x /etc/rc.local
+  systemctl enable rc-local.service
 fi
 
 # AccessPoint
