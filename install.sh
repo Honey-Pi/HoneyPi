@@ -94,11 +94,15 @@ fi
 
 # Install software for surfstick
 echo '>>> Install software for Surfsticks'
-apt-get install -y usb-modeswitch
+apt-get install -y wvdial usb-modeswitch
+cp overlays/wvdial.conf /etc/wvdial.conf
+chmod 700 /etc/wvdial.conf
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
 cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+cp overlays/interfaces /etc/network/interfaces
+
 
 # Autostart
 echo '>>> Put Measurement Script into Autostart'
@@ -140,7 +144,6 @@ fi
 echo
 # Replace HoneyPi files with latest releases
 if [ $ERR -eq 0 ]; then
-  sleep 10
   # waiting for internet connection
   echo ">>> Waiting for internet connection ..."
   while ! timeout 0.2 ping -c 1 -n api.github.com &> /dev/null
