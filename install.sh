@@ -14,6 +14,7 @@ fi
 
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+w1gpio=11
 
 # error counter
 ERR=0
@@ -31,7 +32,7 @@ if grep -q '^i2c-dev' /etc/modules; then
 else
   echo 'i2c-dev' >> /etc/modules
 fi
-if grep -q '^w1_gpio,gpiopin=4' /etc/modules; then
+if grep -q '^w1_gpio' /etc/modules; then
   echo '2 - Seems w1_gpio module already exists, skip this step.'
 else
   echo 'w1_gpio' >> /etc/modules
@@ -41,10 +42,10 @@ if grep -q '^w1_therm' /etc/modules; then
 else
   echo 'w1_therm' >> /etc/modules
 fi
-if grep -q '^dtoverlay=w1-gpio,gpiopin=24' /boot/config.txt; then
+if grep -q '^dtoverlay=w1-gpio' /boot/config.txt; then
   echo '4 - Seems w1-gpio parameter already set, skip this step.'
 else
-  echo 'dtoverlay=w1-gpio,gpiopin=24' >> /boot/config.txt
+  echo 'dtoverlay=w1-gpio,gpiopin='$w1gpio >> /boot/config.txt
 fi
 if grep -q '^dtparam=i2c_arm=on' /boot/config.txt; then
   echo '5 - Seems i2c_arm parameter already set, skip this step.'
