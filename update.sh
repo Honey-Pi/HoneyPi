@@ -17,13 +17,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # install HoneyPi rpi-scripts
 echo '>>> Install HoneyPi runtime measurement scripts'
-TAG=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-if [ $TAG ]; then
+ScriptsTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+if [ $ScriptsTag ]; then
     rm -rf rpi-scripts # remove folder to download latest
-    echo ">>> Downloading rpi-scripts $TAG"
-    wget "https://codeload.github.com/Honey-Pi/rpi-scripts/zip/$TAG" -O HoneyPiScripts.zip
+    echo ">>> Downloading rpi-scripts $ScriptsTag"
+    wget "https://codeload.github.com/Honey-Pi/rpi-scripts/zip/$ScriptsTag" -O HoneyPiScripts.zip
     unzip HoneyPiScripts.zip
-    mv $DIR/rpi-scripts-${TAG//v} $DIR/rpi-scripts
+    mv $DIR/rpi-scripts-${ScriptsTag//v} $DIR/rpi-scripts
     sleep 1
     rm HoneyPiScripts.zip
     # set file rights
@@ -37,16 +37,16 @@ fi
 
 # install HoneyPi rpi-webinterface
 echo '>>> Install HoneyPi webinterface'
-TAG=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-webinterface/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-if [ $TAG ]; then
+WebinterfaceTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-webinterface/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+if [ $WebinterfaceTag ]; then
     rm -rf /var/www/html # remove folder to download latest
-    echo ">>> Downloading rpi-webinterface $TAG"
-    wget "https://codeload.github.com/Honey-Pi/rpi-webinterface/zip/$TAG" -O HoneyPiWebinterface.zip
+    echo ">>> Downloading rpi-webinterface $WebinterfaceTag"
+    wget "https://codeload.github.com/Honey-Pi/rpi-webinterface/zip/$WebinterfaceTag" -O HoneyPiWebinterface.zip
     unzip HoneyPiWebinterface.zip
-    mv $DIR/rpi-webinterface-${TAG//v}/dist /var/www/html
-    mv $DIR/rpi-webinterface-${TAG//v}/backend /var/www/html/backend
+    mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/dist /var/www/html
+    mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/backend /var/www/html/backend
     sleep 1
-    rm -rf $DIR/rpi-webinterface-${TAG//v}
+    rm -rf $DIR/rpi-webinterface-${WebinterfaceTag//v}
     rm HoneyPiWebinterface.zip
     # set file rights
     echo '>>> Set file rights to webinterface'
@@ -55,3 +55,8 @@ if [ $TAG ]; then
 else
     echo '>>> Something went wrong. Updating rpi-webinterface skiped.'
 fi
+
+# Create File with version information
+echo 'HoneyPi' > /var/www/html/version.txt
+echo "rpi-scripts $ScriptsTag" >> /var/www/html/version.txt
+echo "rpi-webinterface $WebinterfaceTag" >> /var/www/html/version.txt
