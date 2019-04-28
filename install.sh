@@ -73,7 +73,7 @@ sudo bash -c "echo 'HoneyPi' > /etc/hostname"
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
 apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip
-pip3 install thingspeak==0.4.0 setuptools wheel numpy smbus bme680 Adafruit_DHT
+pip3 install -r requirements.txt
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
@@ -133,7 +133,7 @@ cp overlays/hostapd /etc/default/hostapd
 systemctl start hostapd
 systemctl start dnsmasq
 # Add routing and masquerade
-cp overlays/sysctl.conf /etc/sysctl.conf
+cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
 iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
 sh -c "iptables-save > /etc/iptables.ipv4.nat"
 if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
