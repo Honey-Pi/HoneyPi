@@ -110,7 +110,7 @@ echo '>>> Put Measurement Script into Autostart'
 if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
   echo 'Seems measurement main.py already in rc.local, skip this step.'
 else
-  sed -i -e '$i \(sleep 5;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
+  sed -i -e '$i \(sleep 3;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
   chmod +x /etc/rc.local
   systemctl enable rc-local.service
 fi
@@ -134,8 +134,8 @@ systemctl start hostapd
 systemctl start dnsmasq
 # Add routing and masquerade
 cp overlays/sysctl.conf /etc/sysctl.conf
-sh -c "iptables-save > /etc/iptables.ipv4.nat"
 iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+sh -c "iptables-save > /etc/iptables.ipv4.nat"
 if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
   echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
 else
