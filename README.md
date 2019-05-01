@@ -2,7 +2,7 @@
 
 ```
 sudo apt-get install -y git
-git clone https://github.com/Honey-Pi/HoneyPi.git HoneyPi
+git clone --depth=1 https://github.com/Honey-Pi/HoneyPi.git HoneyPi
 cd HoneyPi
 sudo sh install.sh
 ```
