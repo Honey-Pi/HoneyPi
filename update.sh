@@ -43,6 +43,7 @@ if [ $WebinterfaceTag ]; then
     echo ">>> Downloading rpi-webinterface $WebinterfaceTag"
     wget "https://codeload.github.com/Honey-Pi/rpi-webinterface/zip/$WebinterfaceTag" -O HoneyPiWebinterface.zip
     unzip HoneyPiWebinterface.zip
+    mkdir -p /var/www
     mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/dist /var/www/html
     mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/backend /var/www/html/backend
     sleep 1

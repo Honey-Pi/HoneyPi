@@ -76,7 +76,7 @@ sudo bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
-apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip
+apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-base-dev
 pip3 install -r requirements.txt
 
 # rpi-webinterface
@@ -114,7 +114,12 @@ fi
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
-cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+if grep -q 'network={' /etc/wpa_supplicant/wpa_supplicant.conf; then
+  echo 'Seems networks are configure, skip this step.'
+else
+  cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+  echo 'Remember to configure your WiFi credentials in /etc/wpa_supplicant/wpa_supplicant.conf'
+fi
 cp overlays/interfaces /etc/network/interfaces
 
 
@@ -131,11 +136,16 @@ fi
 # AccessPoint
 echo '>>> Set Up Raspberry Pi as Access Point'
 apt-get install -y dnsmasq hostapd
+systemctl disable dnsmasq
+systemctl disable hostapd
 systemctl stop dnsmasq
 systemctl stop hostapd
 # Configuring a static IP
-cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-service dhcpcd restart && systemctl daemon-reload
+cp overlays/dhcpcd.conf /etc/dhcpcd.conf.disabled
+
+#Start in client mode
+#service dhcpcd restart && systemctl daemon-reload
+systemctl daemon-reload
 # Configuring the DHCP server (dnsmasq)
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 cp overlays/dnsmasq.conf /etc/dnsmasq.conf
@@ -143,17 +153,19 @@ cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 cp overlays/hostapd.conf /etc/hostapd/hostapd.conf
 cp overlays/hostapd /etc/default/hostapd
 # Start it up
-systemctl start hostapd
-systemctl start dnsmasq
+#systemctl unmask hostapd
+#systemctl start hostapd
+#systemctl start dnsmasq
+
 # Add routing and masquerade
-cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
-iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
-sh -c "iptables-save > /etc/iptables.ipv4.nat"
-if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
-  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
-else
-  sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
-fi
+#cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
+#iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+#sh -c "iptables-save > /etc/iptables.ipv4.nat"
+#if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
+#  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
+#else
+#  sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
+#fi
 
 echo
 # Replace HoneyPi files with latest releases
