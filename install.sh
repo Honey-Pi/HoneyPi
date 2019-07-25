@@ -138,28 +138,18 @@ echo '>>> Set Up Raspberry Pi as Access Point'
 apt-get install -y dnsmasq hostapd
 systemctl disable dnsmasq
 systemctl disable hostapd
-systemctl stop dnsmasq
-systemctl stop hostapd
-# Configuring a static IP
-cp overlays/dhcpcd.conf /etc/dhcpcd.conf.disabled
 
 #Start in client mode
-#service dhcpcd restart && systemctl daemon-reload
-systemctl daemon-reload
 # Configuring the DHCP server (dnsmasq)
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 # Configuring the access point host software (hostapd)
 cp overlays/hostapd.conf /etc/hostapd/hostapd.conf
 cp overlays/hostapd /etc/default/hostapd
-# Start it up
-#systemctl unmask hostapd
-#systemctl start hostapd
-#systemctl start dnsmasq
 
 # Add routing and masquerade
 #cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
-#iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+#iptables -t nat -A  POSTROUTING -j MASQUERADE
 #sh -c "iptables-save > /etc/iptables.ipv4.nat"
 #if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
 #  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
