@@ -16,7 +16,7 @@ sudo sh install.sh
 1. Connect HDMI to a TV
 2. Boot up
 3. Login with username `pi` and password `raspberry`
-4. Run `sudo rapi-config`
+4. Run `sudo raspi-config`
 5. Select `5 Interfacing Options` and enable `P2 SSH`
 6. Connect your Raspi Ethernet Bus to your Router. If you use a Raspi Zero you could configure a wifi network connection.
 7. Now you can connect with your computer the first time via SSH to the Raspi.
