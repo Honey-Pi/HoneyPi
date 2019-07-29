@@ -5,3 +5,5 @@ ifup uap0
 # Fetch wifi channel
 CHANNEL=`iwlist wlan0 channel | grep Current | sed 's/.*Channel \([0-9]*\).*/\1/g'`
 export CHANNEL
+# Create the config for hostapd
+cat /etc/hostapd/hostapd.conf.tmpl | envsubst > /etc/hostapd/hostapd.conf

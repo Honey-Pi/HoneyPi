@@ -21,7 +21,7 @@ ScriptsTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/re
 if [ $ScriptsTag ]; then
     rm -rf rpi-scripts # remove folder to download latest
     echo ">>> Downloading rpi-scripts $ScriptsTag"
-    wget "https://codeload.github.com/Honey-Pi/rpi-scripts/zip/$ScriptsTag" -O HoneyPiScripts.zip
+    wget "https://codeload.github.com/arniebarni/rpi-scripts/zip/$ScriptsTag" -O HoneyPiScripts.zip
     unzip HoneyPiScripts.zip
     mv $DIR/rpi-scripts-${ScriptsTag//v} $DIR/rpi-scripts
     sleep 1

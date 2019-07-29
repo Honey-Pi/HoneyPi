@@ -53,6 +53,15 @@ else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
 
+# enable serial login on Raspberry Pi zero
+if grep -q 'Zero' /proc/device-tree/model; then
+  echo 'Configuring Serial Login'
+  echo ' dtoverlay=dwc2' >> /boot/config.txt
+  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
+  echo '^wg_serial' >> /etc/modules
+  systemctl enable getty@ttyGS0.service
+fi
+
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q '^net.ifnames=0' /boot/cmdline.txt; then
   echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
@@ -121,6 +130,7 @@ else
   echo 'Remember to configure your WiFi credentials in /etc/wpa_supplicant/wpa_supplicant.conf'
 fi
 cp overlays/interfaces /etc/network/interfaces
+cp overlays/dhcpcd.conf.tmpl /etc/dhcpcd.conf.tmpl
 
 
 # Autostart
@@ -137,7 +147,9 @@ fi
 echo '>>> Set Up Raspberry Pi as Access Point'
 apt-get install -y dnsmasq hostapd
 systemctl disable dnsmasq
-systemctl disable hostapd
+systemctl disable hostapd || (systemctl unmask hostapd && systemctl disable hostapd)
+systemctl stop dnsmasq
+systemctl stop hostapd
 
 #Start in client mode
 # Configuring the DHCP server (dnsmasq)
