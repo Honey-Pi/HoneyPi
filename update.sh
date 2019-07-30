@@ -17,7 +17,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # install HoneyPi rpi-scripts
 echo '>>> Install HoneyPi runtime measurement scripts'
-ScriptsTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+ScriptsTag=$(curl --silent "https://api.github.com/repos/arniebarni/rpi-scripts/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
 if [ $ScriptsTag ]; then
     rm -rf rpi-scripts # remove folder to download latest
     echo ">>> Downloading rpi-scripts $ScriptsTag"
