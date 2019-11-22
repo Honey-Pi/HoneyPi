@@ -76,12 +76,12 @@ sudo bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
-apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip
+apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-base-dev
 pip3 install -r requirements.txt
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
-apt-get install -y lighttpd php7.0-cgi
+apt-get install -y lighttpd php7.1-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
 service lighttpd force-reload
 
