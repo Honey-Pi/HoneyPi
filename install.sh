@@ -58,7 +58,7 @@ if grep -q 'Zero' /proc/device-tree/model; then
   echo 'Configuring Serial Login'
   echo ' dtoverlay=dwc2' >> /boot/config.txt
   echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
-  echo '^wg_serial' >> /etc/modules
+  echo 'g_serial' >> /etc/modules
   systemctl enable getty@ttyGS0.service
 fi
 
@@ -130,8 +130,8 @@ else
   echo 'Remember to configure your WiFi credentials in /etc/wpa_supplicant/wpa_supplicant.conf'
 fi
 cp overlays/interfaces /etc/network/interfaces
-cp overlays/dhcpcd.conf.tmpl /etc/dhcpcd.conf.tmpl
-
+cp overlays/dhcpcd.conf /etc/dhcpcd.conf
+# dhcpcd not working on UAP0 interfacce manual ip assignment with utilities.py
 
 # Autostart
 echo '>>> Put Measurement Script into Autostart'
@@ -156,7 +156,7 @@ systemctl stop hostapd
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 # Configuring the access point host software (hostapd)
-cp overlays/hostapd.conf /etc/hostapd/hostapd.conf
+cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
 
 # Add routing and masquerade
