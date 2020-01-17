@@ -8,11 +8,15 @@ GPIO (BCM) | Name | Phycial PIN
 4 | GPIO4 | 7
 17 | GPIO17 | 11
 
-> double occupancy through BME680 (SDA&SCL) and Button at GPIO17.
-> 1-Wire default GPIO must be switched to another GPIO (e.g. )
-> See p.37 in manual.pdf you can check the gpio states with `gpio readall`.
+- Double occupancy through BME680/BME280 (I2C: SDA&SCL) is no problem. 
 
-## Install WittyPi on Raspbian
+- The HoneyPi Button cannot be at GPIO17. Better would be GPIO16.
+
+- 1-Wire default GPIO (used for DS18b20 sensors) must be switched to another GPIO (e.g. GPIO 11). It cannot stay at default value because GPIO4 is used from WittyPi.
+
+- See p.37 in manual.pdf you can check the gpio states with `gpio readall`.
+
+## Install WittyPi software on Raspbian
 
 ### [WittyPi 2](http://www.uugear.com/product/wittypi2/)
 
