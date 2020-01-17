@@ -14,11 +14,25 @@ GPIO (BCM) | Name | Phycial PIN
 
 ## Install WittyPi on Raspbian
 
-1. `wget http://www.uugear.com/repo/WittyPi2/installWittyPi.sh`
+### [WittyPi 2](http://www.uugear.com/product/wittypi2/)
 
-2. `sudo sh installWittyPi.sh`
+1. `cd ~`
+2. `wget http://www.uugear.com/repo/WittyPi2/installWittyPi.sh`
+3. `sudo sh installWittyPi.sh`
+4. Skip -n fake-hwclock and Qt 5 GUI.
+5. If Raspi 4 (Buster): Update WiringPi to the latest Raspbian Buster compatible version (>v2.52):
+	- 	`wget https://project-downloads.drogon.net/wiringpi-latest.deb`
+	- `sudo dpkg -i wiringpi-latest.deb`
 
-3. Skip -n fake-hwclock and Qt 5 GUI.
+
+### [WittyPi 3](http://www.uugear.com/product/witty-pi-3-realtime-clock-and-power-management-for-raspberry-pi/)
+
+1. `cd ~`
+2. `wget http://www.uugear.com/repo/WittyPi3/install.sh`
+3. `sudo sh install.sh`
+
+	
+
 
 ## Set schedule script
 1. Save script as `schedule.wpi` to `/home/pi/wittyPi/schedule.wpi`
