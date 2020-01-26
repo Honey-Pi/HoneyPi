@@ -23,3 +23,4 @@ sudo sh install.sh
 7. Now you can connect with your computer the first time via SSH to the Raspi.
 8. Login again. Change password with `passwd` to `hivescale`
 9. Run the Install Instructions from above
+10. If you want to use a WittyPi module install it like explained [here](docs/WittyPi/).
