@@ -53,6 +53,15 @@ else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
 
+# enable serial login on Raspberry Pi zero
+if grep -q 'Zero' /proc/device-tree/model; then
+  echo 'Configuring Serial Login'
+  echo ' dtoverlay=dwc2' >> /boot/config.txt
+  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
+  echo 'g_serial' >> /etc/modules
+  systemctl enable getty@ttyGS0.service
+fi
+
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q '^net.ifnames=0' /boot/cmdline.txt; then
   echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
@@ -114,9 +123,15 @@ fi
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
-cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+if grep -q 'network={' /etc/wpa_supplicant/wpa_supplicant.conf; then
+  echo 'Seems networks are configure, skip this step.'
+else
+  cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+  echo 'Remember to configure your WiFi credentials in /etc/wpa_supplicant/wpa_supplicant.conf'
+fi
 cp overlays/interfaces /etc/network/interfaces
-
+cp overlays/dhcpcd.conf /etc/dhcpcd.conf
+# dhcpcd not working on UAP0 interfacce manual ip assignment with utilities.py
 
 # Autostart
 echo '>>> Put Measurement Script into Autostart'
@@ -131,29 +146,28 @@ fi
 # AccessPoint
 echo '>>> Set Up Raspberry Pi as Access Point'
 apt-get install -y dnsmasq hostapd
+systemctl disable dnsmasq
+systemctl disable hostapd || (systemctl unmask hostapd && systemctl disable hostapd)
 systemctl stop dnsmasq
 systemctl stop hostapd
-# Configuring a static IP
-cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-service dhcpcd restart && systemctl daemon-reload
+
+#Start in client mode
 # Configuring the DHCP server (dnsmasq)
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 # Configuring the access point host software (hostapd)
-cp overlays/hostapd.conf /etc/hostapd/hostapd.conf
+cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
-# Start it up
-systemctl start hostapd
-systemctl start dnsmasq
+
 # Add routing and masquerade
-cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
-iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
-sh -c "iptables-save > /etc/iptables.ipv4.nat"
-if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
-  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
-else
-  sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
-fi
+#cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
+#iptables -t nat -A  POSTROUTING -j MASQUERADE
+#sh -c "iptables-save > /etc/iptables.ipv4.nat"
+#if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
+#  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
+#else
+#  sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
+#fi
 
 echo
 # Replace HoneyPi files with latest releases
