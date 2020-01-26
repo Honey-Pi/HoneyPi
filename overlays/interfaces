@@ -17,3 +17,6 @@ wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 
 auto uap0
 iface uap0 inet manual
+
+allow-hotplug wwan0
+iface wwan0 inet dhcp
