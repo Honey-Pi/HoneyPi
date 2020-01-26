@@ -69,6 +69,13 @@ else
   echo 'net.ifnames=0' >> /boot/cmdline.txt
 fi
 
+# Disable image resizing
+if grep -q 'init_resize.sh' /boot/cmdline.txt; then
+    sed -i -e '/init=\/usr\/lib\/raspi-config\/init_resize.sh/d' /boot/cmdline.txt
+else
+    echo '7 - Seems init_resize parameter already removed, skip this step.'
+fi
+
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
 ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
