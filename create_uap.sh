@@ -8,10 +8,19 @@ ip addr add 192.168.4.1/24 broadcast 192.168.4.255 dev uap0
 ifup uap0
 # Fetch wifi channel
 CHANNEL=`iwlist wlan0 channel | grep Current | sed 's/.*Channel \([0-9]*\).*/\1/g'`
-# prevent using 5Ghz (uap0: IEEE 802.11 Hardware does not support configured channel)
-if [[ -z "$CHANNEL" || "$CHANNEL" -gt "13" ]]; then
-  CHANNEL="1"
+# if no network connected
+if [[ -z "$CHANNEL" ]]; then
+   echo "Info: Currently not connected to a network."
+   CHANNEL="1"
 fi
-export CHANNEL
+# prevent using 5Ghz (uap0: IEEE 802.11 Hardware does not support configured channel)
+if [[ "$CHANNEL" -gt "13" ]]; then
+   echo "Info: Connected to 5GHz (Channel: $CHANNEL)"
+   HWMODE="a" #5Ghz
+else
+   echo "Info: Connected to 2GHz (Channel: $CHANNEL)"
+   HWMODE="g" #2,4Ghz
+fi
+export CHANNEL && export HWMODE
 # Create the config for hostapd
 cat /etc/hostapd/hostapd.conf.tmpl | envsubst > /etc/hostapd/hostapd.conf
