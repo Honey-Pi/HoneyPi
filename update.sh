@@ -59,6 +59,6 @@ fi
 
 # Create File with version information
 DATE=`date +%d-%m-%y`
-echo "HoneyPi (last installation $DATE)" > /var/www/html/version.txt
+echo "HoneyPi (last update: $DATE)" > /var/www/html/version.txt
 echo "rpi-scripts $ScriptsTag" >> /var/www/html/version.txt
 echo "rpi-webinterface $WebinterfaceTag" >> /var/www/html/version.txt
