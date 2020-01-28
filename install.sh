@@ -110,7 +110,7 @@ echo '>>> Give shell-scripts rights'
 if grep -q 'www-data ALL=NOPASSWD: ALL' /etc/sudoers; then
   echo 'Seems www-data already has the rights, skip this step.'
 else
-  echo 'www-data ALL=NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
+  echo 'www-data ALL=NOPASSWD: ALL' | EDITOR='tee -a' visudo
 fi
 
 # Install software for surfstick
