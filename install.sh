@@ -16,13 +16,9 @@ fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 w1gpio=11
 
-# error counter
-ERR=0
-
 # sys update
 echo '>>> System update'
-apt-get update
-apt-get upgrade -y
+apt-get update && apt-get upgrade -y
 
 # enable I2C on Raspberry Pi
 # enable 1-Wire on Raspberry Pi
@@ -87,8 +83,8 @@ dpkg-reconfigure ntp
 
 # change hostname to http://HoneyPi.local
 echo '>>> Change Hostname to HoneyPi'
-sudo sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
-sudo bash -c "echo 'HoneyPi' > /etc/hostname"
+sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
+bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
@@ -177,21 +173,15 @@ cp overlays/hostapd /etc/default/hostapd
 #fi
 
 echo
-# Replace HoneyPi files with latest releases
-if [ $ERR -eq 0 ]; then
-  # waiting for internet connection
-  echo ">>> Waiting for internet connection ..."
-  while ! timeout 0.2 ping -c 1 -n api.github.com &> /dev/null
-  do
-    printf "."
-  done
-  sh update.sh
-else
-  echo '>>> Something went wrong. Updating measurement scripts skiped.'
-fi
 
-if [ $ERR -eq 0 ]; then
-  echo '>>> All done. Please reboot your Pi :-)'
-else
-  echo '>>> Something went wrong. Please check the messages above :-('
-fi
+# waiting for internet connection
+echo ">>> Waiting for internet connection ..."
+while ! timeout 0.2 ping -c 1 -n api.github.com &> /dev/null
+do
+printf "."
+done
+
+# Replace HoneyPi files with latest releases
+sh update.sh
+
+echo '>>> All done. Please reboot your Pi :-)'
