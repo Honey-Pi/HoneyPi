@@ -14,6 +14,8 @@ fi
 
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# default gpio for Ds18b20, per default raspbian would use gpio 4
 w1gpio=11
 
 # sys update
@@ -49,15 +51,6 @@ else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
 
-# enable serial login on Raspberry Pi zero
-if grep -q 'Zero' /proc/device-tree/model; then
-  echo 'Configuring Serial Login'
-  echo ' dtoverlay=dwc2' >> /boot/config.txt
-  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
-  echo 'g_serial' >> /etc/modules
-  systemctl enable getty@ttyGS0.service
-fi
-
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q '^net.ifnames=0' /boot/cmdline.txt; then
   echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
@@ -72,6 +65,17 @@ else
     echo '7 - Seems init_resize parameter already removed, skip this step.'
 fi
 
+# enable serial login on Raspberry Pi zero
+if grep -q 'Zero' /proc/device-tree/model; then
+  echo '>>> Configuring Serial Login for Raspberry Zero'
+  echo ' dtoverlay=dwc2' >> /boot/config.txt
+  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
+  echo 'g_serial' >> /etc/modules
+  systemctl enable getty@ttyGS0.service
+else
+    echo '8 - This is not a Raspberry Zero, skip this step.'
+fi
+
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
 ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
@@ -79,7 +83,7 @@ dpkg-reconfigure -f noninteractive tzdata
 
 # Install NTP for time synchronisation with wittyPi
 apt-get install -y ntp
-dpkg-reconfigure ntp
+dpkg-reconfigure -f noninteractive ntp
 
 # change hostname to http://HoneyPi.local
 echo '>>> Change Hostname to HoneyPi'
@@ -93,7 +97,7 @@ pip3 install -r requirements.txt
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
-apt-get install -y lighttpd php7.1-cgi
+apt-get install -y lighttpd php-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
 service lighttpd force-reload
 
