@@ -15,9 +15,6 @@ fi
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Update CA certs for a secure connection to GitHub
-update-ca-certificates -f
-
 # install HoneyPi rpi-scripts
 echo '>>> Install HoneyPi runtime measurement scripts'
 ScriptsTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" -k | grep -Po '"tag_name": "\K.*?(?=")')
