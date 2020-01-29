@@ -186,6 +186,7 @@ printf "."
 done
 
 # Replace HoneyPi files with latest releases
+echo '>>> Run HoneyPi Updater'
 sh update.sh
 
 echo '>>> All done. Please reboot your Pi :-)'
