@@ -1,6 +1,7 @@
 # Install
 
 ```
+sudo apt-get update && sudo apt-get dist-upgrade -y
 sudo apt-get install -y git
 git clone --depth=1 https://github.com/Honey-Pi/HoneyPi.git HoneyPi
 cd HoneyPi
@@ -9,7 +10,7 @@ sudo sh install.sh
 > It is recommended to run it in your home directory.
 
 
-# First start on a clean [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/) OS
+# First start on a clean [Raspbian Lite](https://www.raspberrypi.org/downloads/raspbian/) OS
 
 > We recommend flashing with [balenaEtcher](https://youtu.be/tcMT1hxhY3U)
 
@@ -22,3 +23,4 @@ sudo sh install.sh
 7. Now you can connect with your computer the first time via SSH to the Raspi.
 8. Login again. Change password with `passwd` to `hivescale`
 9. Run the Install Instructions from above
+10. If you want to use a WittyPi module install it like explained [here](docs/WittyPi/).

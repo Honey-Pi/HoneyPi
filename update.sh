@@ -17,11 +17,11 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # install HoneyPi rpi-scripts
 echo '>>> Install HoneyPi runtime measurement scripts'
-ScriptsTag=$(curl --silent "https://api.github.com/repos/elschnorro77/rpi-scripts/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+ScriptsTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" -k | grep -Po '"tag_name": "\K.*?(?=")')
 if [ $ScriptsTag ]; then
     rm -rf rpi-scripts # remove folder to download latest
     echo ">>> Downloading rpi-scripts $ScriptsTag"
-    wget "https://codeload.github.com/elschnorro77/rpi-scripts/zip/$ScriptsTag" -O HoneyPiScripts.zip
+    wget "https://codeload.github.com/Honey-Pi/rpi-scripts/zip/$ScriptsTag" -O HoneyPiScripts.zip
     unzip HoneyPiScripts.zip
     mv $DIR/rpi-scripts-${ScriptsTag//v} $DIR/rpi-scripts
     sleep 1
@@ -34,10 +34,9 @@ else
     echo '>>> Something went wrong. Updating rpi-scripts skiped.'
 fi
 
-
 # install HoneyPi rpi-webinterface
 echo '>>> Install HoneyPi webinterface'
-WebinterfaceTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-webinterface/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+WebinterfaceTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-webinterface/releases/latest" -k | grep -Po '"tag_name": "\K.*?(?=")')
 if [ $WebinterfaceTag ]; then
     rm -rf /var/www/html # remove folder to download latest
     echo ">>> Downloading rpi-webinterface $WebinterfaceTag"
@@ -58,6 +57,7 @@ else
 fi
 
 # Create File with version information
-echo 'HoneyPi' > /var/www/html/version.txt
+DATE=`date +%d-%m-%y`
+echo "HoneyPi (last install on RPi: $DATE)" > /var/www/html/version.txt
 echo "rpi-scripts $ScriptsTag" >> /var/www/html/version.txt
 echo "rpi-webinterface $WebinterfaceTag" >> /var/www/html/version.txt

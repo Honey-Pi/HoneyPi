@@ -14,15 +14,15 @@ fi
 
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-w1gpio=11
 
-# error counter
-ERR=0
+# default gpio for Ds18b20, per default raspbian would use gpio 4
+w1gpio=11
 
 # sys update
 echo '>>> System update'
-apt-get update
-apt-get upgrade -y
+apt-get update && apt-get upgrade -y
+# Update CA certs for a secure connection to GitHub
+update-ca-certificates -f
 
 # enable I2C on Raspberry Pi
 # enable 1-Wire on Raspberry Pi
@@ -53,20 +53,29 @@ else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
 
-# enable serial login on Raspberry Pi zero
-if grep -q 'Zero' /proc/device-tree/model; then
-  echo 'Configuring Serial Login'
-  echo ' dtoverlay=dwc2' >> /boot/config.txt
-  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
-  echo 'g_serial' >> /etc/modules
-  systemctl enable getty@ttyGS0.service
-fi
-
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q '^net.ifnames=0' /boot/cmdline.txt; then
   echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
 else
   echo 'net.ifnames=0' >> /boot/cmdline.txt
+fi
+
+# Disable image resizing
+if grep -q 'init_resize.sh' /boot/cmdline.txt; then
+    sed -i -e '/init=\/usr\/lib\/raspi-config\/init_resize.sh/d' /boot/cmdline.txt
+else
+    echo '7 - Seems init_resize parameter already removed, skip this step.'
+fi
+
+# enable serial login on Raspberry Pi zero
+if grep -q 'Zero' /proc/device-tree/model; then
+  echo '>>> Configuring Serial Login for Raspberry Zero'
+  echo ' dtoverlay=dwc2' >> /boot/config.txt
+  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
+  echo 'g_serial' >> /etc/modules
+  systemctl enable getty@ttyGS0.service
+else
+    echo '8 - This is not a Raspberry Zero, skip this step.'
 fi
 
 # Change timezone in Debian 9 (Stretch)
@@ -76,12 +85,12 @@ dpkg-reconfigure -f noninteractive tzdata
 
 # Install NTP for time synchronisation with wittyPi
 apt-get install -y ntp
-dpkg-reconfigure ntp
+dpkg-reconfigure -f noninteractive ntp
 
 # change hostname to http://HoneyPi.local
 echo '>>> Change Hostname to HoneyPi'
-sudo sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
-sudo bash -c "echo 'HoneyPi' > /etc/hostname"
+sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
+bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
@@ -90,7 +99,7 @@ pip3 install -r requirements.txt
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
-apt-get install -y lighttpd php7.1-cgi
+apt-get install -y lighttpd php-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
 service lighttpd force-reload
 
@@ -103,7 +112,7 @@ echo '>>> Give shell-scripts rights'
 if grep -q 'www-data ALL=NOPASSWD: ALL' /etc/sudoers; then
   echo 'Seems www-data already has the rights, skip this step.'
 else
-  echo 'www-data ALL=NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
+  echo 'www-data ALL=NOPASSWD: ALL' | EDITOR='tee -a' visudo
 fi
 
 # Install software for surfstick
@@ -170,21 +179,16 @@ cp overlays/hostapd /etc/default/hostapd
 #fi
 
 echo
-# Replace HoneyPi files with latest releases
-if [ $ERR -eq 0 ]; then
-  # waiting for internet connection
-  echo ">>> Waiting for internet connection ..."
-  while ! timeout 0.2 ping -c 1 -n api.github.com &> /dev/null
-  do
-    printf "."
-  done
-  sh update.sh
-else
-  echo '>>> Something went wrong. Updating measurement scripts skiped.'
-fi
 
-if [ $ERR -eq 0 ]; then
-  echo '>>> All done. Please reboot your Pi :-)'
-else
-  echo '>>> Something went wrong. Please check the messages above :-('
-fi
+# waiting for internet connection
+echo ">>> Waiting for internet connection ..."
+while ! timeout 0.2 ping -c 1 -n api.github.com &> /dev/null
+do
+printf "."
+done
+
+# Replace HoneyPi files with latest releases
+echo '>>> Run HoneyPi Updater'
+sh update.sh
+
+echo '>>> All done. Please reboot your Pi :-)'
