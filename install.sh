@@ -117,10 +117,11 @@ fi
 
 # Install software for surfstick
 echo '>>> Install software for Surfsticks'
-apt-get install -y wvdial usb-modeswitch
+apt-get install -y wvdial usb-modeswitch usb-modeswitch-data
 cp overlays/wvdial.conf /etc/wvdial.conf
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
+cp overlays/12d1_1f01 /etc/usb_modeswitch.d/12d1_1f01
 echo '>>> Put wvdial into Autostart'
 if grep -q "wvdial &" /etc/rc.local; then
   echo 'Seems wvdial already in rc.local, skip this step.'
