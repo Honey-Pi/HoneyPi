@@ -16,16 +16,16 @@ fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # install HoneyPi rpi-scripts
-echo '>>> Install HoneyPi runtime measurement scripts'
+echo '>>> Install latest HoneyPi runtime measurement scripts (non-prerelease and non-draft)'
 ScriptsTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-scripts/releases/latest" -k | grep -Po '"tag_name": "\K.*?(?=")')
 if [ $ScriptsTag ]; then
-    rm -rf rpi-scripts # remove folder to download latest
-    echo ">>> Downloading rpi-scripts $ScriptsTag"
-    wget "https://codeload.github.com/Honey-Pi/rpi-scripts/zip/$ScriptsTag" -O HoneyPiScripts.zip
-    unzip HoneyPiScripts.zip
+    rm -rf $DIR/rpi-scripts # remove folder to download latest
+    echo ">>> Downloading latest rpi-scripts ($ScriptsTag)"
+    wget -q --show-progress "https://codeload.github.com/Honey-Pi/rpi-scripts/zip/$ScriptsTag" -O $DIR/HoneyPiScripts.zip
+    unzip $DIR/HoneyPiScripts.zip -d $DIR -q
     mv $DIR/rpi-scripts-${ScriptsTag//v} $DIR/rpi-scripts
     sleep 1
-    rm HoneyPiScripts.zip
+    rm $DIR/HoneyPiScripts.zip
     # set file rights
     echo '>>> Set file rights to python scripts'
     chown -R pi:pi $DIR/rpi-scripts
@@ -35,19 +35,21 @@ else
 fi
 
 # install HoneyPi rpi-webinterface
-echo '>>> Install HoneyPi webinterface'
+echo '>>> Install latest HoneyPi webinterface (non-prerelease and non-draft)'
 WebinterfaceTag=$(curl --silent "https://api.github.com/repos/Honey-Pi/rpi-webinterface/releases/latest" -k | grep -Po '"tag_name": "\K.*?(?=")')
 if [ $WebinterfaceTag ]; then
+    [ -f /var/www/htm/backend/settings.json ] && mv /var/www/htm/backend/settings.json $DIR/settings.json.backup
     rm -rf /var/www/html # remove folder to download latest
-    echo ">>> Downloading rpi-webinterface $WebinterfaceTag"
-    wget "https://codeload.github.com/Honey-Pi/rpi-webinterface/zip/$WebinterfaceTag" -O HoneyPiWebinterface.zip
-    unzip HoneyPiWebinterface.zip
+    echo ">>> Downloading latest rpi-webinterface ($WebinterfaceTag)"
+    wget -q --show-progress "https://codeload.github.com/Honey-Pi/rpi-webinterface/zip/$WebinterfaceTag" -O $DIR/HoneyPiWebinterface.zip
+    unzip $DIR/HoneyPiWebinterface.zip -d $DIR -q
     mkdir -p /var/www
     mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/dist /var/www/html
     mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/backend /var/www/html/backend
+    [ -f $DIR/settings.json.backup ] && mv $DIR/settings.json.backup /var/www/htm/backend/settings.json
     sleep 1
     rm -rf $DIR/rpi-webinterface-${WebinterfaceTag//v}
-    rm HoneyPiWebinterface.zip
+    rm $DIR/HoneyPiWebinterface.zip
     # set file rights
     echo '>>> Set file rights to webinterface'
     chown -R www-data:www-data /var/www/html
