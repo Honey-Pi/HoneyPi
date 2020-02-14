@@ -60,13 +60,6 @@ else
   echo 'net.ifnames=0' >> /boot/cmdline.txt
 fi
 
-# Disable image resizing
-if grep -q 'init_resize.sh' /boot/cmdline.txt; then
-    sed -i -e '/init=\/usr\/lib\/raspi-config\/init_resize.sh/d' /boot/cmdline.txt
-else
-    echo '7 - Seems init_resize parameter already removed, skip this step.'
-fi
-
 # enable serial login on Raspberry Pi zero
 if grep -q 'Zero' /proc/device-tree/model; then
   echo '>>> Configuring Serial Login for Raspberry Zero'
@@ -83,14 +76,14 @@ echo '>>> Change Timezone to Berlin'
 ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
 
-# Install NTP for time synchronisation with wittyPi
-apt-get install -y ntp
-dpkg-reconfigure -f noninteractive ntp
-
 # change hostname to http://HoneyPi.local
 echo '>>> Change Hostname to HoneyPi'
 sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
 bash -c "echo 'HoneyPi' > /etc/hostname"
+
+# Install NTP for time synchronisation with wittyPi
+apt-get install -y ntp
+dpkg-reconfigure -f noninteractive ntp
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
