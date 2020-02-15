@@ -3,6 +3,7 @@
 ```
 sudo apt-get update && sudo apt-get dist-upgrade -y
 sudo apt-get install -y git
+cd ~
 git clone --depth=1 https://github.com/Honey-Pi/HoneyPi.git HoneyPi
 cd HoneyPi
 sudo sh install.sh
@@ -10,7 +11,7 @@ sudo sh install.sh
 > It is recommended to run it in your home directory.
 
 
-# First start on a clean [Raspbian Lite](https://www.raspberrypi.org/downloads/raspbian/) OS
+## First start on a clean [Raspbian Lite](https://www.raspberrypi.org/downloads/raspbian/) OS
 
 > We recommend flashing with [balenaEtcher](https://youtu.be/tcMT1hxhY3U)
 
@@ -24,3 +25,13 @@ sudo sh install.sh
 8. Login again. Change password with `passwd` to `hivescale`
 9. Run the Install Instructions from above
 10. If you want to use a WittyPi module install it like explained [here](docs/WittyPi/).
+
+## Update to the latest release (also beta and pre-release)
+
+```
+cd /home/pi/HoneyPi/
+# Update the Installer
+sudo git pull
+# Update the measurement scripts and the webinterface (arg1 means stable=0)
+sudo sh update.sh 0
+```

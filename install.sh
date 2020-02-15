@@ -141,7 +141,7 @@ echo '>>> Put Measurement Script into Autostart'
 if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
   echo 'Seems measurement main.py already in rc.local, skip this step.'
 else
-  sed -i -e '$i \(sleep 3;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
+  sed -i -e '$i \(sleep 2;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
   chmod +x /etc/rc.local
   systemctl enable rc-local.service
 fi
