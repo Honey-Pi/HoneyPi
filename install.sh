@@ -131,6 +131,8 @@ if grep -q 'network={' /etc/wpa_supplicant/wpa_supplicant.conf; then
 else
   cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
   echo 'Remember to configure your WiFi credentials in /etc/wpa_supplicant/wpa_supplicant.conf'
+  chmod -R 600 /etc/wpa_supplicant/wpa_supplicant.conf
+  chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 cp overlays/interfaces /etc/network/interfaces
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
