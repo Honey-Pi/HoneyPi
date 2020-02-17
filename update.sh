@@ -54,7 +54,7 @@ REPO="Honey-Pi/rpi-webinterface"
 WebinterfaceTag=$(get_latest_release $REPO $STABLE)
 echo ">>> Install latest HoneyPi webinterface ($WebinterfaceTag) from $REPO stable=$STABLE"
 if [ ! -z "$WebinterfaceTag" ]; then
-    [ -f /var/www/htm/backend/settings.json ] && mv /var/www/htm/backend/settings.json $DIR/settings.json.backup
+    [ -f /var/www/html/backend/settings.json ] && mv /var/www/html/backend/settings.json $DIR/settings.json.backup
     rm -rf /var/www/html # remove folder to download latest
     echo ">>> Downloading latest rpi-webinterface ($WebinterfaceTag)"
     wget -q "https://codeload.github.com/$REPO/zip/$WebinterfaceTag" -O $DIR/HoneyPiWebinterface.zip
@@ -62,7 +62,8 @@ if [ ! -z "$WebinterfaceTag" ]; then
     mkdir -p /var/www
     mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/dist /var/www/html
     mv $DIR/rpi-webinterface-${WebinterfaceTag//v}/backend /var/www/html/backend
-    [ -f $DIR/settings.json.backup ] && mv $DIR/settings.json.backup /var/www/htm/backend/settings.json
+    [ -f $DIR/settings.json.backup ] && mv $DIR/settings.json.backup /var/www/html/backend/settings.json
+    touch /var/www/html/backend/settings.json # create empty file to give rights to
     sleep 1
     rm -rf $DIR/rpi-webinterface-${WebinterfaceTag//v}
     rm $DIR/HoneyPiWebinterface.zip
