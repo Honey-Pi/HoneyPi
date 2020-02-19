@@ -71,6 +71,11 @@ else
     echo '8 - This is not a Raspberry Zero, skip this step.'
 fi
 
+# Add a timeout for waiting for interfaces (in case no internet is connected)
+mkdir -p /etc/systemd/system/networking.service.d/
+bash -c 'echo -e "[Service]\nTimeoutStartSec=10sec" > /etc/systemd/system/networking.service.d/timeout.conf'
+systemctl daemon-reload
+
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
 ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
