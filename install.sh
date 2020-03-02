@@ -73,7 +73,7 @@ fi
 
 # Add a timeout for waiting for interfaces (in case no internet is connected)
 mkdir -p /etc/systemd/system/networking.service.d/
-bash -c 'echo -e "[Service]\nTimeoutStartSec=10sec" > /etc/systemd/system/networking.service.d/timeout.conf'
+bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
 systemctl daemon-reload
 
 # Change timezone in Debian 9 (Stretch)
