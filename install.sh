@@ -60,13 +60,6 @@ else
   echo 'net.ifnames=0' >> /boot/cmdline.txt
 fi
 
-# Disable image resizing
-if grep -q 'init_resize.sh' /boot/cmdline.txt; then
-    sed -i -e '/init=\/usr\/lib\/raspi-config\/init_resize.sh/d' /boot/cmdline.txt
-else
-    echo '7 - Seems init_resize parameter already removed, skip this step.'
-fi
-
 # enable serial login on Raspberry Pi zero
 if grep -q 'Zero' /proc/device-tree/model; then
   echo '>>> Configuring Serial Login for Raspberry Zero'
@@ -78,19 +71,24 @@ else
     echo '8 - This is not a Raspberry Zero, skip this step.'
 fi
 
+# Add a timeout for waiting for interfaces (in case no internet is connected)
+mkdir -p /etc/systemd/system/networking.service.d/
+bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
+systemctl daemon-reload
+
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
 ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
 
-# Install NTP for time synchronisation with wittyPi
-apt-get install -y ntp
-dpkg-reconfigure -f noninteractive ntp
-
 # change hostname to http://HoneyPi.local
 echo '>>> Change Hostname to HoneyPi'
 sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
 bash -c "echo 'HoneyPi' > /etc/hostname"
+
+# Install NTP for time synchronisation with wittyPi
+apt-get install -y ntp
+dpkg-reconfigure -f noninteractive ntp
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
@@ -121,7 +119,7 @@ apt-get install -y wvdial usb-modeswitch usb-modeswitch-data
 cp overlays/wvdial.conf /etc/wvdial.conf
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
-cp overlays/12d1_1f01 /etc/usb_modeswitch.d/12d1_1f01
+cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
 echo '>>> Put wvdial into Autostart'
 if grep -q "wvdial &" /etc/rc.local; then
   echo 'Seems wvdial already in rc.local, skip this step.'
@@ -138,6 +136,8 @@ if grep -q 'network={' /etc/wpa_supplicant/wpa_supplicant.conf; then
 else
   cp overlays/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
   echo 'Remember to configure your WiFi credentials in /etc/wpa_supplicant/wpa_supplicant.conf'
+  chmod -R 600 /etc/wpa_supplicant/wpa_supplicant.conf
+  chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 cp overlays/interfaces /etc/network/interfaces
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
@@ -148,7 +148,7 @@ echo '>>> Put Measurement Script into Autostart'
 if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
   echo 'Seems measurement main.py already in rc.local, skip this step.'
 else
-  sed -i -e '$i \(sleep 3;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
+  sed -i -e '$i \(sleep 2;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
   chmod +x /etc/rc.local
   systemctl enable rc-local.service
 fi
