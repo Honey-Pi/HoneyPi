@@ -12,6 +12,12 @@ if [ "$(id -u)" != 0 ]; then
   exit 1
 fi
 
+if [ -z "$1" ] ; then
+	echo "No argument."
+else
+	betatest=$1
+fi
+
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -190,6 +196,9 @@ done
 
 # Replace HoneyPi files with latest releases
 echo '>>> Run HoneyPi Updater'
-sh update.sh
-
+if [ $betatest -eq 0 ] ; then
+    sh update.sh 0
+else
+    sh update.sh
+fi
 echo '>>> All done. Please reboot your Pi :-)'
