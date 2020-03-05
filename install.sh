@@ -72,6 +72,9 @@ if grep -q 'Zero' /proc/device-tree/model; then
   echo ' dtoverlay=dwc2' >> /boot/config.txt
   echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
   echo 'g_serial' >> /etc/modules
+  # fix /raspberrypi/linux/issues/1929
+  mkdir -p /etc/systemd/system/getty@ttyGS0.service.d
+  bash -c 'echo -e "[Service]\nTTYReset=no\nTTYVHangup=no\nTTYVTDisallocate=no" > /etc/systemd/system/getty@ttyGS0.service.d/override.conf'
   systemctl enable getty@ttyGS0.service
 else
     echo '8 - This is not a Raspberry Zero, skip this step.'
@@ -197,8 +200,10 @@ done
 # Replace HoneyPi files with latest releases
 echo '>>> Run HoneyPi Updater'
 if [ $betatest -eq 0 ] ; then
+    # install pre-release
     sh update.sh 0
 else
+    # install stable
     sh update.sh
 fi
 echo '>>> All done. Please reboot your Pi :-)'
