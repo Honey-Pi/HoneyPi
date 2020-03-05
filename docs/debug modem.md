@@ -32,4 +32,10 @@ list all serial ports
 switching to storage mode
 
 		sudo usb_modeswitch -v 12d1 -p 1f01 -V 12d1 -P 14DC -J 
+		
+		
+check /var/log/messages
+
+	grep -a -B 2 -A 2 "pppd\|usb_modeswitch" /var/log/messages
+	
 
