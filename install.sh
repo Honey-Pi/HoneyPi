@@ -13,7 +13,7 @@ if [ "$(id -u)" != 0 ]; then
 fi
 
 if [ -z "$1" ] ; then
-	echo "No argument."
+	echo "Info: No argument for stable/pre-release. Default is stable."
 else
 	betatest=$1
 fi

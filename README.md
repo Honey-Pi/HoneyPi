@@ -32,6 +32,6 @@ sudo sh install.sh
 cd /home/pi/HoneyPi/
 # Update the Installer
 sudo git pull
-# Update the measurement scripts and the webinterface (arg1 means stable=0)
+# Update the measurement scripts and the webinterface (Arg1 to select stable or pre-release,  for stable use 1 for betatest use 0)
 sudo sh update.sh 0
 ```
