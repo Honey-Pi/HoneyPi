@@ -1,3 +1,5 @@
+## usb_modeswitch Debugging Cheatsheet
+
 show all network interfaces
 
 	ifconfig -a
@@ -31,11 +33,40 @@ list all serial ports
 
 switching to storage mode
 
-	usb_modeswitch -v 12d1 -p 1f01 -V 12d1 -P 14DC -J 
-		
+	usb_modeswitch -v 12d1 -p 1f01 -V 12d1 -P 14DC -J
 		
 check /var/log/messages
 
-	grep -a -B 2 -A 2 "usb_modeswitch\|modem\|pppd\|PPP\|ppp0\|ttyUSB0" /var/log/messages
+	grep -a -B 2 -A 2 "usb_modeswitch\|modem\|pppd\|PPP\|ppp0\|ttyUSB0\|wvdial" /var/log/messages
 	
 
+### Check if internet with surfstick does work
+disable internet but do not disconnect wlan0
+
+	sudo ip route del default via 192.168.178.0 dev wlan0
+		
+enable internet again
+
+	sudo ip route add default via 192.168.178.0 dev wlan0
+	
+check with which ip address raspi goes outside
+
+	wget --server-response -q -S -O - bot.whatismyipaddress.com
+	
+	whois IPv6: https://www.ultratools.com/tools/ipv6InfoResult?ipAddress=2001%3A16b8%3A2489%3A9500%3Aba27%3Aebff%3Afe95%3Aa3d1
+	whois ipv4: https://www.ultratools.com/tools/ipWhoisLookupResult
+	
+show rounting table and gateways
+
+	netstat -rn
+	
+use ppp0 instead of wlan0
+
+	ip route show
+	# delete default route
+	sudo ip route del default 
+	# connect to wlan0 route
+	sudo route add default gw 192.168.178.78
+	# connect to ppp0 route
+	sudo route add default gw 10.64.64.64
+	sudo ip route add default via 10.189.96.198 dev ppp0	
