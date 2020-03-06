@@ -148,17 +148,19 @@ fi
 echo '>>> Install software for Surfsticks'
 apt-get install -y wvdial usb-modeswitch usb-modeswitch-data
 cp overlays/wvdial.conf /etc/wvdial.conf
+cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
-cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
-echo '>>> Put wvdial into Autostart'
-if grep -q "wvdial &" /etc/rc.local; then
-  echo 'Seems wvdial already in rc.local, skip this step.'
-else
-  sed -i -e '$i \wvdial &\n' /etc/rc.local
-  chmod +x /etc/rc.local
-  systemctl enable rc-local.service
-fi
+#cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
+
+#echo '>>> Put wvdial into Autostart'
+#if grep -q "connection.sh" /etc/rc.local; then
+#  echo 'Seems connection.sh already in rc.local, skip this step.'
+#else
+#  sed -i -e '$i \(sh '"$DIR"'/rpi-scripts/shell-scripts/connection.sh)&\n' /etc/rc.local
+#  chmod +x /etc/rc.local
+#  systemctl enable rc-local.service
+#fi
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
