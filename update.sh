@@ -18,6 +18,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # decide to use stable release or pre-release [cmd for pre-releases: sh update.sh 0]
 STABLE=${1:-1} # default: 1 (stable)
 
+# Update CA certs for a secure connection to GitHub
+update-ca-certificates -f
+
 function get_latest_release() {
     REPO=$1
     STABLE=$2

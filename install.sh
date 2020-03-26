@@ -28,8 +28,6 @@ w1gpio=11
 # sys update
 echo '>>> System update'
 apt-get update && apt-get upgrade -y
-# Update CA certs for a secure connection to GitHub
-update-ca-certificates -f
 
 # enable I2C on Raspberry Pi
 # enable 1-Wire on Raspberry Pi
