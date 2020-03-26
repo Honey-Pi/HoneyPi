@@ -128,6 +128,8 @@ pip3 install -r requirements.txt
 echo '>>> Install software for Webinterface'
 apt-get install -y lighttpd php-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
+cp overlays/lighttpd.conf /etc/lighttpd/lighttpd.conf
+chmod -R 644 /etc/lighttpd/lighttpd.conf
 service lighttpd force-reload
 
 echo '>>> Create www-data user'
