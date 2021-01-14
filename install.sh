@@ -151,7 +151,7 @@ cp overlays/wvdial.conf /etc/wvdial.conf
 cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
-#cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
+cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
 
 #echo '>>> Put wvdial into Autostart'
 #if grep -q "connection.sh" /etc/rc.local; then
