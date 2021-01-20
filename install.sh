@@ -101,9 +101,9 @@ else
 fi
 
 # Add a timeout for waiting for interfaces (in case no internet is connected)
-mkdir -p /etc/systemd/system/networking.service.d/
-bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
-systemctl daemon-reload
+#mkdir -p /etc/systemd/system/networking.service.d/
+#bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
+#systemctl daemon-reload
 
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
@@ -151,7 +151,7 @@ cp overlays/wvdial.conf /etc/wvdial.conf
 cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
-cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
+#cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
 
 #echo '>>> Put wvdial into Autostart'
 #if grep -q "connection.sh" /etc/rc.local; then
@@ -172,7 +172,7 @@ else
   chmod -R 600 /etc/wpa_supplicant/wpa_supplicant.conf
   chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
-cp overlays/interfaces /etc/network/interfaces
+cp overlays/uap0 /etc/network/interfaces.d/uap0
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
 # dhcpcd not working on UAP0 interfacce manual ip assignment with utilities.py
 
