@@ -18,6 +18,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # decide to use stable release or pre-release [cmd for pre-releases: sh update.sh 0]
 STABLE=${1:-1} # default: 1 (stable)
 
+# Update CA certs for a secure connection to GitHub
+update-ca-certificates -f
+
 function get_latest_release() {
     REPO=$1
     STABLE=$2
@@ -35,11 +38,13 @@ REPO="Honey-Pi/rpi-scripts"
 ScriptsTag=$(get_latest_release $REPO $STABLE)
 echo ">>> Install latest HoneyPi runtime measurement scripts ($ScriptsTag) from $REPO stable=$STABLE"
 if [ ! -z "$ScriptsTag" ]; then
+    [ -f $DIR/rpi-scripts/error.log ] && mv $DIR/rpi-scripts/error.log $DIR/error.log.backup
     rm -rf $DIR/rpi-scripts # remove folder to download latest
     echo ">>> Downloading latest rpi-scripts ($ScriptsTag)"
     wget -q "https://codeload.github.com/$REPO/zip/$ScriptsTag" -O $DIR/HoneyPiScripts.zip
     unzip -q $DIR/HoneyPiScripts.zip -d $DIR
     mv $DIR/rpi-scripts-${ScriptsTag//v} $DIR/rpi-scripts
+    [ -f $DIR/error.log.backup ] && mv $DIR/error.log.backup $DIR/rpi-scripts/error.log
     sleep 1
     rm $DIR/HoneyPiScripts.zip
     # set file rights

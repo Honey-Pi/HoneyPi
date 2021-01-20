@@ -7,16 +7,28 @@ source-directory /etc/network/interfaces.d
 auto lo
 iface lo inet loopback
 
+# eth0 could be an eth adapter for zero, a huawei surfstick or eth0 on raspi4
 auto eth0
+allow-hotplug eth0
 iface eth0 inet dhcp
 
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+# configure wifi connection
 auto wlan0
 allow-hotplug wlan0
 iface wlan0 inet dhcp
 wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 
+# virtual device for ap
 auto uap0
 iface uap0 inet manual
 
+# for some wifi surfsticks
 allow-hotplug wwan0
 iface wwan0 inet dhcp
+
+# usb to pc direct ssh connection
+allow-hotplug usb0
+iface usb0 inet dhcp

@@ -1,4 +1,4 @@
-# Shrink Raspberry Pi Images using VirtualBox and KaliLinux
+## Shrink Raspberry Pi Images using VirtualBox and KaliLinux
 1. Install PiShrink script
 	* Follow tutorial: https://linuxundich.de/raspberry-pi/pishrink-verkleinert-raspberry-pi-images/
 2. Copy the big size image to SharedFolder into Linux Distribition using VirutalMaschine and KaliLinux
@@ -13,3 +13,15 @@ dd if=/dev/zero bs=512 count=1 >> honeypi-20181125-v0.0.3.img
 ```
 sudo ./pishrink.sh ./honeypi-20181125-v0.0.3.img honeypi-20181125-v0.0.3-shrinked.img
 ```
+
+## Shrink Raspbian image using MacOS and Docker
+
+1. Use [ApplePi-Baker v2](https://www.tweaking4all.com/hardware/raspberry-pi/applepi-baker-v2/) to create `backup.img`
+2. Start Docker Daemon
+3. Run 
+	```
+		docker run --rm --privileged=true -v `pwd`:/workdir turee/pishrink-docker pishrink backup.img
+	``` 
+	in same folder as `backup.img` [1]
+
+[1]: https://github.com/Turee/pishrink-docker

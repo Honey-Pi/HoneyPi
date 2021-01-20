@@ -1,0 +1,23 @@
+[Dialer Defaults]
+Phone = *99#
+Username = " "
+Password = " "
+Stupid Mode = on
+Dial Command = ATDT
+Modem Type = USB Modem
+# USB Port
+Modem = /dev/${ttyUSB}
+Init1 = ATZ
+
+[Dialer nopin]
+# PIN: 0000
+Init2= AT+CPIN="0000"
+Init3= AT+CLCK="SC",0,"0000"
+
+[Dialer umts]
+Carrier Check = on
+# Abfrage der hinterlegten APNs. Der erste Eintrag wird zur Einwahl verwendet.
+Init2= AT+CGDCONT?
+# Netzclub:
+Init3= AT+CGDCONT=1,"IP","${APN}"
+ISDN = off

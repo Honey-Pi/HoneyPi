@@ -13,9 +13,10 @@ if [ "$(id -u)" != 0 ]; then
 fi
 
 if [ -z "$1" ] ; then
-	echo "No argument."
+	echo "Info: No argument for stable/pre-release. Default is stable."
+    stable=1
 else
-	betatest=$1
+	stable=$1
 fi
 
 # target directory
@@ -27,8 +28,6 @@ w1gpio=11
 # sys update
 echo '>>> System update'
 apt-get update && apt-get upgrade -y
-# Update CA certs for a secure connection to GitHub
-update-ca-certificates -f
 
 # enable I2C on Raspberry Pi
 # enable 1-Wire on Raspberry Pi
@@ -60,21 +59,45 @@ else
 fi
 
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
-if grep -q '^net.ifnames=0' /boot/cmdline.txt; then
-  echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
+if grep -q 'net.ifnames=0' /boot/cmdline.txt; then
+    echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
 else
-  echo 'net.ifnames=0' >> /boot/cmdline.txt
+    sed -i '1s/$/ net.ifnames=0/' /boot/cmdline.txt
 fi
 
-# enable serial login on Raspberry Pi zero
+# Code to run only on raspberry zero
 if grep -q 'Zero' /proc/device-tree/model; then
-  echo '>>> Configuring Serial Login for Raspberry Zero'
-  echo ' dtoverlay=dwc2' >> /boot/config.txt
-  echo ' modules-load=dwc2,g_serial' >> /boot/cmdline.txt
-  echo 'g_serial' >> /etc/modules
-  systemctl enable getty@ttyGS0.service
+    serial=0
+    if [ $serial -eq 1 ] ; then
+        echo '>>> Configuring Serial Login for Raspberry Zero'
+        # To see if the line needs to be appended
+        dt=$(cat /boot/config.txt | grep "dtoverlay=dwc2")
+        if [ "$dt" != "dtoverlay=dwc2" ]; then
+            echo "dtoverlay=dwc2" >> /boot/config.txt
+        fi
+        # To see if the line needs to be appended
+        mod=$(cat /boot/cmdline.txt | grep -o "modules-load=dwc2,g_serial")
+        if [ "$mod" != "modules-load=dwc2,g_serial" ]; then
+            sed -i '1s/$/ modules-load=dwc2,g_serial/' /boot/cmdline.txt
+        fi
+        echo 'g_serial' >> /etc/modules
+        systemctl enable serial-getty@ttyGS0.service
+
+    else
+        echo '>>> Configuring usb0 SSH Login for Raspberry Zero'
+        # To see if the line needs to be appended
+        dt=$(cat /boot/config.txt | grep "dtoverlay=dwc2")
+        if [ "$dt" != "dtoverlay=dwc2" ]; then
+            echo "dtoverlay=dwc2" >> /boot/config.txt
+        fi
+        # To see if the line needs to be appended
+        mod=$(cat /boot/cmdline.txt | grep -o "modules-load=dwc2,g_ether")
+        if [ "$mod" != "modules-load=dwc2,g_ether" ]; then
+            sed -i '1s/$/ modules-load=dwc2,g_ether/' /boot/cmdline.txt
+        fi
+    fi
 else
-    echo '8 - This is not a Raspberry Zero, skip this step.'
+    echo '>>> Info: This is not a Raspberry Zero, skip this step.'
 fi
 
 # Add a timeout for waiting for interfaces (in case no internet is connected)
@@ -105,6 +128,8 @@ pip3 install -r requirements.txt
 echo '>>> Install software for Webinterface'
 apt-get install -y lighttpd php-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
+cp overlays/lighttpd.conf /etc/lighttpd/lighttpd.conf
+chmod -R 644 /etc/lighttpd/lighttpd.conf
 service lighttpd force-reload
 
 echo '>>> Create www-data user'
@@ -123,17 +148,19 @@ fi
 echo '>>> Install software for Surfsticks'
 apt-get install -y wvdial usb-modeswitch usb-modeswitch-data
 cp overlays/wvdial.conf /etc/wvdial.conf
+cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
 cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
-echo '>>> Put wvdial into Autostart'
-if grep -q "wvdial &" /etc/rc.local; then
-  echo 'Seems wvdial already in rc.local, skip this step.'
-else
-  sed -i -e '$i \wvdial &\n' /etc/rc.local
-  chmod +x /etc/rc.local
-  systemctl enable rc-local.service
-fi
+
+#echo '>>> Put wvdial into Autostart'
+#if grep -q "connection.sh" /etc/rc.local; then
+#  echo 'Seems connection.sh already in rc.local, skip this step.'
+#else
+#  sed -i -e '$i \(sh '"$DIR"'/rpi-scripts/shell-scripts/connection.sh)&\n' /etc/rc.local
+#  chmod +x /etc/rc.local
+#  systemctl enable rc-local.service
+#fi
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
@@ -175,8 +202,10 @@ cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
 
+# net.ipv4.ip_forward=1
+cp overlays/sysctl.conf /etc/sysctl.conf
+
 # Add routing and masquerade
-#cp overlays/sysctl.conf /etc/sysctl.conf # sysctl -w net.ipv4.ip_forward=1
 #iptables -t nat -A  POSTROUTING -j MASQUERADE
 #sh -c "iptables-save > /etc/iptables.ipv4.nat"
 #if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
@@ -196,9 +225,11 @@ done
 
 # Replace HoneyPi files with latest releases
 echo '>>> Run HoneyPi Updater'
-if [ $betatest -eq 0 ] ; then
+if [ $stable -eq 0 ] ; then
+    # install pre-release
     sh update.sh 0
 else
+    # install stable
     sh update.sh
 fi
 echo '>>> All done. Please reboot your Pi :-)'
