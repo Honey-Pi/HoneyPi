@@ -1,4 +1,0 @@
-# virtual device for ap
-auto uap0
-allow-hotplug uap0
-iface uap0 inet manual
