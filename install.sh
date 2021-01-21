@@ -172,9 +172,7 @@ else
   chmod -R 600 /etc/wpa_supplicant/wpa_supplicant.conf
   chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
-cp overlays/uap0 /etc/network/interfaces.d/uap0
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-# dhcpcd not working on UAP0 interfacce manual ip assignment with utilities.py
 
 # Autostart
 echo '>>> Put Measurement Script into Autostart'
