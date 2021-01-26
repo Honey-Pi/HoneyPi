@@ -201,7 +201,7 @@ cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
 
 # net.ipv4.ip_forward=1
-cp overlays/sysctl.conf /etc/sysctl.conf
+#cp overlays/sysctl.conf /etc/sysctl.conf #not required any more, now part of client_to_ap_mode.sh
 
 # Add routing and masquerade
 #iptables -t nat -A  POSTROUTING -j MASQUERADE
