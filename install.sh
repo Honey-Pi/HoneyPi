@@ -151,7 +151,6 @@ cp overlays/wvdial.conf /etc/wvdial.conf
 cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
-#cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
 
 #echo '>>> Put wvdial into Autostart'
 #if grep -q "connection.sh" /etc/rc.local; then
@@ -199,18 +198,6 @@ cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 # Configuring the access point host software (hostapd)
 cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
-
-# net.ipv4.ip_forward=1
-#cp overlays/sysctl.conf /etc/sysctl.conf #not required any more, now part of client_to_ap_mode.sh
-
-# Add routing and masquerade
-#iptables -t nat -A  POSTROUTING -j MASQUERADE
-#sh -c "iptables-save > /etc/iptables.ipv4.nat"
-#if grep -q 'iptables-restore < /etc/iptables.ipv4.nat' /etc/rc.local; then
-#  echo 'Seems "iptables-restore < /etc/iptables.ipv4.nat" already in rc.local, skip this step.'
-#else
-#  sed -i -e '$i \iptables-restore < /etc/iptables.ipv4.nat\n' /etc/rc.local
-#fi
 
 echo
 
