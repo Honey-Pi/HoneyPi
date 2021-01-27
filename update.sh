@@ -39,6 +39,8 @@ ScriptsTag=$(get_latest_release $REPO $STABLE)
 echo ">>> Install latest HoneyPi runtime measurement scripts ($ScriptsTag) from $REPO stable=$STABLE"
 if [ ! -z "$ScriptsTag" ]; then
     [ -f $DIR/rpi-scripts/error.log ] && mv $DIR/rpi-scripts/error.log $DIR/error.log.backup
+    CURRENTDATETIME='date +"%Y-%m-%d_%T"'
+    mv $DIR/rpi-scripts $DIR/rpi-scripts.$CURRENTDATETIME
     rm -rf $DIR/rpi-scripts # remove folder to download latest
     echo ">>> Downloading latest rpi-scripts ($ScriptsTag)"
     wget -q "https://codeload.github.com/$REPO/zip/$ScriptsTag" -O $DIR/HoneyPiScripts.zip

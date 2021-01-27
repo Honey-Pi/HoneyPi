@@ -101,9 +101,9 @@ else
 fi
 
 # Add a timeout for waiting for interfaces (in case no internet is connected)
-mkdir -p /etc/systemd/system/networking.service.d/
-bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
-systemctl daemon-reload
+#mkdir -p /etc/systemd/system/networking.service.d/
+#bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
+#systemctl daemon-reload
 
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
@@ -151,7 +151,7 @@ cp overlays/wvdial.conf /etc/wvdial.conf
 cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
-cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
+#cp overlays/12d1:1f01 /etc/usb_modeswitch.d/12d1:1f01
 
 #echo '>>> Put wvdial into Autostart'
 #if grep -q "connection.sh" /etc/rc.local; then
@@ -172,9 +172,7 @@ else
   chmod -R 600 /etc/wpa_supplicant/wpa_supplicant.conf
   chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
-cp overlays/interfaces /etc/network/interfaces
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-# dhcpcd not working on UAP0 interfacce manual ip assignment with utilities.py
 
 # Autostart
 echo '>>> Put Measurement Script into Autostart'
@@ -203,7 +201,7 @@ cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
 
 # net.ipv4.ip_forward=1
-cp overlays/sysctl.conf /etc/sysctl.conf
+#cp overlays/sysctl.conf /etc/sysctl.conf #not required any more, now part of client_to_ap_mode.sh
 
 # Add routing and masquerade
 #iptables -t nat -A  POSTROUTING -j MASQUERADE
