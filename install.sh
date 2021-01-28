@@ -124,6 +124,9 @@ echo '>>> Install software for measurement python scripts'
 apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-base-dev
 pip3 install -r requirements.txt
 
+# install required package for update.sh
+apt-get install -y unzip
+
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
 apt-get install -y lighttpd php-cgi
