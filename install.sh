@@ -19,6 +19,10 @@ else
 	stable=$1
 fi
 
+# replace symbolic link to use bash as default shell interpreter
+sudo ln -s bash /bin/sh.bash
+sudo mv /bin/sh.bash /bin/sh
+
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
