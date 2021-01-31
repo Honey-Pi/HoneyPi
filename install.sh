@@ -129,6 +129,7 @@ sed -i 's/127.0.1.1.*raspberry.*/127.0.1.1 HoneyPi/' /etc/hosts
 bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # Install NTP for time synchronisation with wittyPi
+echo '>>> Install NTP for time synchronisation with wittyPi'
 apt-get install -y ntp
 dpkg-reconfigure -f noninteractive ntp
 
@@ -136,9 +137,6 @@ dpkg-reconfigure -f noninteractive ntp
 echo '>>> Install software for measurement python scripts'
 apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-base-dev
 pip3 install -r requirements.txt
-
-# install required package for update.sh
-apt-get install -y unzip
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
