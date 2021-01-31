@@ -20,8 +20,17 @@ else
 fi
 
 # replace symbolic link to use bash as default shell interpreter
-sudo ln -s bash /bin/sh.bash
-sudo mv /bin/sh.bash /bin/sh
+echo '>>> Use bash as default shell interpreter'
+ln -s bash /bin/sh.bash
+mv /bin/sh.bash /bin/sh
+
+# set locale to reduce debug messages
+echo '>>> Set locale to en_GB.UTF-8'
+export LANGUAGE=en_GB.UTF-8
+export LANG=en_GB.UTF-8
+export LC_ALL=en_GB.UTF-8
+locale-gen en_GB.UTF-8
+dpkg-reconfigure -f noninteractive locales
 
 # target directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
