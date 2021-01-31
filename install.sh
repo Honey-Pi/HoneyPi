@@ -13,10 +13,10 @@ if [ "$(id -u)" != 0 ]; then
 fi
 
 if [ -z "$1" ] ; then
-	echo "Info: No argument for stable/pre-release. Default is stable."
+    echo "Info: No argument for stable/pre-release. Default is stable."
     stable=1
 else
-	stable=$1
+    stable=$1
 fi
 
 # replace symbolic link to use bash as default shell interpreter
