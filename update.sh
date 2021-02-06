@@ -92,7 +92,7 @@ Postupgradescript=$"./rpi-scripts/$ScriptsTag/post-upgrade.sh"
 echo ">>> checking for existance of post-upgrade script in: $Postupgradescript"
 if [ -f "$Postupgradescript" ]; then
     echo '>>> Running post-upgrade script'
-	./$Postupgradescript
+	$Postupgradescript
 else
     echo '>>> No post-upgrade script for this Update.'
 fi
