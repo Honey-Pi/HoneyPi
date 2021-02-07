@@ -88,3 +88,12 @@ DATE=`date +%Y-%m-%d`
 echo "HoneyPi (last install on Raspi: $DATE)" > /var/www/html/version.txt
 echo "rpi-scripts $ScriptsTag" >> /var/www/html/version.txt
 echo "rpi-webinterface $WebinterfaceTag" >> /var/www/html/version.txt
+
+Postupgradescript=$"./rpi-scripts/$ScriptsTag/post-upgrade.sh"
+echo ">>> checking for existance of post-upgrade script in: $Postupgradescript"
+if [ -f "$Postupgradescript" ]; then
+    echo '>>> Running post-upgrade script'
+	$Postupgradescript
+else
+    echo '>>> No post-upgrade script for this Update.'
+fi
