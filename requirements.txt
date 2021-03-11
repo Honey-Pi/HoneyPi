@@ -4,4 +4,4 @@ wheel
 numpy
 smbus
 bme680
-Adafruit_DHT==1.4.0
+Adafruit_DHT
