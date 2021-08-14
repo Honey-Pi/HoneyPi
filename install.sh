@@ -135,7 +135,7 @@ dpkg-reconfigure -f noninteractive ntp
 
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
-apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-base-dev
+apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-base-dev libgpiod2
 pip3 install -r requirements.txt
 
 # rpi-webinterface

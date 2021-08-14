@@ -4,4 +4,5 @@ wheel
 numpy
 smbus
 bme680
-Adafruit_DHT
+Adafruit_DHT # deprecated
+adafruit-circuitpython-dht # replacement for Adafruit_DHT (bugs with Pi Zero WH)
