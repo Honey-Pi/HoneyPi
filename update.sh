@@ -19,8 +19,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 STABLE=${1:-1} # default: 1 (stable)
 
 # Update CA certs for a secure connection to GitHub
-echo '>>> Update CA certs for a secure connection to GitHub'
-update-ca-certificates
+echo '>>> Update CA certs for a secure connection'
+wget https://curl.se/ca/cacert.pem -O /etc/ssl/certs/cacert.pem
+update-ca-certificates --fresh
 
 function get_latest_release() {
     REPO=$1
