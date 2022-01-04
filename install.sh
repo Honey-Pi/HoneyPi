@@ -192,14 +192,24 @@ fi
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
 
 # Autostart
-echo '>>> Put Measurement Script into Autostart'
-if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
-  echo 'Seems measurement main.py already in rc.local, skip this step.'
-else
-  sed -i -e '$i \(sleep 2;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
-  chmod +x /etc/rc.local
-  systemctl enable rc-local.service
-fi
+#echo '>>> Put Measurement Script into Autostart'
+#if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
+#  echo 'Seems measurement main.py already in rc.local, skip this step.'
+#else
+#  sed -i -e '$i \(sleep 2;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
+#  chmod +x /etc/rc.local
+#  systemctl enable rc-local.service
+#fi
+echo '>>> Enable rc.local'
+chmod +x /etc/rc.local
+systemctl enable rc-local.service
+
+echo '>>> Enable HoneyPi Service as autostart'
+sed -i '/(sleep 2;python3/c\#' /etc/rc.local # disable autostart in rc.local
+cp overlays/honeypi.service /lib/systemd/system/honeypi.service
+chmod 644 /lib/systemd/system/honeypi.service
+systemctl daemon-reload
+systemctl enable honeypi.service
 
 # AccessPoint
 echo '>>> Set Up Raspberry Pi as Access Point'

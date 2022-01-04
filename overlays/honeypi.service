@@ -1,0 +1,15 @@
+[Unit]
+Description=HoneyPi Main Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 -u /home/pi/HoneyPi/rpi-scripts/main.py
+Restart=always
+RestartSec=3
+WorkingDirectory=/home/pi/HoneyPi/
+User=root
+StandardOutput=syslog+console
+
+[Install]
+WantedBy=multi-user.target
