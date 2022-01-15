@@ -139,7 +139,7 @@ apt-get install -y rpi.gpio python-smbus python-setuptools python3-pip libatlas-
 pip3 install -r requirements.txt --upgrade
 
 # required since version v1.3.7
-echo '>>> Install software for v1.3.7'
+echo '>>> Install software for v1.3.7 - packages used for oled display'
 apt-get -y install libopenjp2-7 libtiff5
 
 # rpi-webinterface
