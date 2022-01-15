@@ -9,3 +9,5 @@ adafruit-circuitpython-dht # replacement for Adafruit_DHT (bugs with Pi Zero WH)
 Pillow # required since version v1.3.7
 ds18b20 # required since version v1.3.7
 rak811 # required since version v1.3.7
+smbus2 # required since version v1.3.7
+pytz # required since version v1.3.7
