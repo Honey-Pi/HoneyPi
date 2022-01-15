@@ -6,7 +6,7 @@ smbus
 bme680
 Adafruit_DHT # deprecated, but still used for Pi Zero WH
 adafruit-circuitpython-dht # replacement for Adafruit_DHT (bugs with Pi Zero WH)
-Pillow==8.4.0 # required since version v1.3.7, fixed version due to piwheels error on zero
+Pillow==9.0.0 # required since version v1.3.7, fixed version due to piwheels error on zero
 ds18b20 # required since version v1.3.7
 rak811 # required since version v1.3.7
 smbus2 # required since version v1.3.7 - oled & wittypi
