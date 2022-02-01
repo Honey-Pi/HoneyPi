@@ -1,13 +1,14 @@
 thingspeak==0.4.1
 setuptools
 wheel
-numpy==1.20.0 # fixed version because of this issue on Raspi Zero: https://github.com/numpy/numpy/issues/20765
-smbus
+numpy
+#smbus replaced by smbus2
 bme680
-Adafruit_DHT # deprecated, but still used for Pi Zero WH
-adafruit-circuitpython-dht # replacement for Adafruit_DHT (bugs with Pi Zero WH)
-Pillow==8.4.0 # required since version v1.3.7, fixed version due to piwheels error on zero
+#Adafruit_DHT # deprecated, but still used for Pi Zero WH - no longer working on bullseye
+adafruit-circuitpython-dht # replacement for Adafruit_DHT (bugs with Pi Zero WH - which bugs?)
+Pillow #==8.4.0 # required since version v1.3.7, fixed version due to piwheels error on zero, fixed in the meantime
 ds18b20 # required since version v1.3.7
-rak811 # required since version v1.3.7
+rak811 # required since version v1.3.7 - LoRaWAN module rak811
 smbus2 # required since version v1.3.7 - oled & wittypi
 pytz # required since version v1.3.7 - wittypi
+pynmea2 # required since version v1.3.7 - PA1010D (gps)
