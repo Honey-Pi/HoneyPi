@@ -10,5 +10,6 @@ Pillow #==8.4.0 # required since version v1.3.7, fixed version due to piwheels e
 ds18b20 # required since version v1.3.7
 rak811 # required since version v1.3.7 - LoRaWAN module rak811
 smbus2 # required since version v1.3.7 - oled & wittypi
-pytz # required since version v1.3.7 - wittypi
+pytz # required since version v1.3.7 - wittypi & PA1010D 
 pynmea2 # required since version v1.3.7 - PA1010D (gps)
+timezonefinder # required since version v1.3.7 - PA1010D (gps)
