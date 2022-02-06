@@ -2,14 +2,14 @@ thingspeak==0.4.1
 setuptools
 wheel
 numpy
-#smbus replaced by smbus2
+#smbus # replaced by smbus2
 bme680
-#Adafruit_DHT # deprecated, but still used for Pi Zero WH - no longer working on bullseye
-adafruit-circuitpython-dht # replacement for Adafruit_DHT (bugs with Pi Zero WH - which bugs?)
-Pillow #==8.4.0 # required since version v1.3.7, fixed version due to piwheels error on zero, fixed in the meantime
+Adafruit_DHT # deprecated, but still used for Pi Zero WH because of known issues such as https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/73 - no longer working on bullseye
+adafruit-circuitpython-dht # latest DHT library
+Pillow # required since version v1.3.7, fixed version due to piwheels error on zero (==8.4.0), fixed in the meantime
 ds18b20 # required since version v1.3.7
 rak811 # required since version v1.3.7 - LoRaWAN module rak811
 smbus2 # required since version v1.3.7 - oled & wittypi
-pytz # required since version v1.3.7 - wittypi & PA1010D 
+pytz # required since version v1.3.7 - wittypi & PA1010D
 pynmea2 # required since version v1.3.7 - PA1010D (gps)
 timezonefinder # required since version v1.3.7 - PA1010D (gps)
