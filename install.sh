@@ -8,8 +8,8 @@
 
 # check if sudo is used
 if [ "$(id -u)" != 0 ]; then
-  echo 'Sorry, you need to run this script with sudo'
-  exit 1
+    echo 'Sorry, you need to run this script with sudo'
+    exit 1
 fi
 
 if [ -z "$1" ] ; then
