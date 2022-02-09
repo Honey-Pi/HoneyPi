@@ -139,8 +139,8 @@ apt-get install -y python3-rpi.gpio python3-smbus python3-setuptools python3-pip
 pip3 install -r requirements.txt --upgrade
 
 # required since version v1.3.7
-echo '>>> Install software for v1.3.7 - packages used for oled display'
-apt-get -y install libopenjp2-7 libtiff5
+echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
+apt-get -y install libopenjp2-7 libtiff5 python3-psutil
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
