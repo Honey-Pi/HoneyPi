@@ -50,7 +50,7 @@ sudo sh update.sh 0
 
 ## Start and Stop HoneyPi Service
 
-In previous versions the measurement scripts have been autostarted after the booting of the Raspberry Pi. There was no option to start/stop the measurement service. Only by pressing the button the measurement routine stopped and the access point was created to be able to connect to the maintenance webinterface. But now we changed this behaviour. If you are connected by terminal you can start and stop the honeypi service on your Raspberry Pi. Don't forget to enable the service after you stopped for your next reboot.
+In previous versions (before v1.3.7) the measurement scripts have been autostarted after the booting of the Raspberry Pi (we used `/etc/rc.local`). There was no option to start/stop the measurement service. Only by pressing the hardware button the measurement routine stopped. But now we changed this behaviour. If you are connected by terminal you can start and stop the honeypi service on your Raspberry Pi. Don't forget to enable the service after you stopped for your next reboot. Also you can use the [webinterface backend](https://github.com/Honey-Pi/rpi-webinterface#backend) to remotely control your Raspberry Pi. 
 
 ```
 # check status
@@ -63,5 +63,4 @@ sudo systemctl start honeypi.service
 sudo journalctl --unit=honeypi
 # reload if crashed before
 sudo systemctl reload-or-restart honeypi
-
 ```
