@@ -43,13 +43,31 @@ echo '>>> System update'
 apt-get update && apt-get upgrade -y
 
 # enable I2C on Raspberry Pi
-# enable 1-Wire on Raspberry Pi
-echo '>>> Enable I2C and 1-Wire'
+
+echo '>>> Enable I2C'
+if grep -q 'i2c-bcm2708' /etc/modules; then
+  echo 'Seems i2c-bcm2708 module already exists, skip this step.'
+else
+  echo 'i2c-bcm2708' >> /etc/modules
+fi
 if grep -q '^i2c-dev' /etc/modules; then
   echo '1 - Seems i2c-dev module already exists, skip this step.'
 else
   echo 'i2c-dev' >> /etc/modules
 fi
+if grep -q 'dtparam=i2c1=on' /boot/config.txt; then
+  echo 'Seems i2c1 parameter already set, skip this step.'
+else
+  echo 'dtparam=i2c1=on' >> /boot/config.txt
+fi
+if grep -q '^dtparam=i2c_arm=on' /boot/config.txt; then
+  echo '5 - Seems i2c_arm parameter already set, skip this step.'
+else
+  echo 'dtparam=i2c_arm=on' >> /boot/config.txt
+fi
+
+# enable 1-Wire on Raspberry Pi
+echo '>>> Enable 1-Wire'
 if grep -q '^w1_gpio' /etc/modules; then
   echo '2 - Seems w1_gpio module already exists, skip this step.'
 else
@@ -65,10 +83,18 @@ if grep -q '^dtoverlay=w1-gpio' /boot/config.txt; then
 else
   echo 'dtoverlay=w1-gpio,gpiopin='$w1gpio >> /boot/config.txt
 fi
-if grep -q '^dtparam=i2c_arm=on' /boot/config.txt; then
-  echo '5 - Seems i2c_arm parameter already set, skip this step.'
+
+# enable miniuart-bt on Raspberry Pi and set core frequency, for stable miniUART and bluetooth (see https://www.raspberrypi.org/documentation/configuration/uart.md)
+echo "Install required miniuart-bt modules for rak811 & WittyPi..."
+if grep -q 'dtoverlay=pi3-miniuart-bt' /boot/config.txt; then
+  echo 'Seems setting Pi3/4 Bluetooth to use mini-UART is done already, skip this step.'
 else
-  echo 'dtparam=i2c_arm=on' >> /boot/config.txt
+  echo 'dtoverlay=pi3-miniuart-bt' >> /boot/config.txt
+fi
+if grep -q 'core_freq=250' /boot/config.txt; then
+  echo 'Seems the frequency of GPU processor core is set to 250MHz already, skip this step.'
+else
+  echo 'core_freq=250' >> /boot/config.txt
 fi
 
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
