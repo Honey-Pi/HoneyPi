@@ -43,7 +43,6 @@ echo '>>> System update'
 apt-get update && apt-get upgrade -y
 
 # enable I2C on Raspberry Pi
-
 echo '>>> Enable I2C'
 if grep -q 'i2c-bcm2708' /etc/modules; then
   echo 'Seems i2c-bcm2708 module already exists, skip this step.'
@@ -96,6 +95,20 @@ if grep -q 'core_freq=250' /boot/config.txt; then
 else
   echo 'core_freq=250' >> /boot/config.txt
 fi
+
+# Enable HDMI for a default "safe" mode to work on all screens
+if grep -q '#hdmi_safe=1' /boot/config.txt; then
+  sed -i 's/#hdmi_safe=1/hdmi_safe=1/' /boot/config.txt
+else
+  if grep -q 'hdmi_safe=1' /boot/config.txt; then
+	echo 'Seems the hdmi is set to safe mode already, skip this step.'
+  else
+	echo 'hdmi_safe=1' >> /boot/config.txt
+  fi
+fi
+
+# Enable Wifi
+sudo rfkill unblock all
 
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q 'net.ifnames=0' /boot/cmdline.txt; then
