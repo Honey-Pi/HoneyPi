@@ -1,14 +1,15 @@
 ## Physical install
-### WittyPi Pins to Raspberry Pins
+
+### Mapping of WittyPi 2 & 3 Pins to Raspberry Pins
 
 GPIO (BCM) | Name | Phycial PIN
 --- | --- | ---:
 2 | SDA | 3
 3 | SCL | 5
-4 | GPIO4 | 7
-17 | GPIO17 | 11
+4 | GPIO 7 | 7
+17 | GPIO 0 | 11
 
-- Double occupancy through BME680/BME280 (I2C: SDA&SCL) is no problem. 
+- Double occupancy through BME680/BME280 (I2C: SDA&SCL) is no problem.
 
 - The HoneyPi Button cannot be at GPIO17. Better would be GPIO16.
 
@@ -16,9 +17,22 @@ GPIO (BCM) | Name | Phycial PIN
 
 - See p.37 in manual.pdf you can check the gpio states with `gpio readall`.
 
+
+### Mapping of WittyPi 4 Pins to Raspberry Pins
+
+I2C Address: 0x08
+
+GPIO (BCM) | Name | Phycial PIN | Description
+--- | --- | --- | ---:
+2 | SDA 1 | 3 |
+3 | SCL 1 | 5 |
+4 | GPIO 7 | 7 |
+17 | GPIO 0 | 11 |
+14 | TXD | 8  |  high=system is on, low=system is off 
+
 ## Install WittyPi software on Raspbian
 
-### [WittyPi 2](http://www.uugear.com/product/wittypi2/)
+### [WittyPi 2](http://www.uugear.com/product/wittypi2/) and [WittyPi Mini](https://www.uugear.com/product/wittypi-mini/)
 
 1. `cd ~`
 2. `wget http://www.uugear.com/repo/WittyPi2/installWittyPi.sh`
@@ -35,7 +49,13 @@ GPIO (BCM) | Name | Phycial PIN
 2. `wget http://www.uugear.com/repo/WittyPi3/install.sh`
 3. `sudo sh install.sh`
 
-	
+
+### [Witty Pi 4 Mini](https://www.uugear.com/product/witty-pi-4-mini/)
+
+
+1. `cd ~`
+2. `wget https://www.uugear.com/repo/WittyPi4/install.sh`
+3. `sudo sh install.sh`
 
 
 ## Set schedule script

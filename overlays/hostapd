@@ -1,2 +1,2 @@
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
-DAEMON_OPTS="-d -t -f /home/pi/HoneyPi/hostapd.log"
+DAEMON_OPTS="-t -f /home/pi/HoneyPi/hostapd.log"

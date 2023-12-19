@@ -50,7 +50,7 @@ else
   echo 'i2c-bcm2708' >> /etc/modules
 fi
 if grep -q '^i2c-dev' /etc/modules; then
-  echo '1 - Seems i2c-dev module already exists, skip this step.'
+  echo 'Seems i2c-dev module already exists, skip this step.'
 else
   echo 'i2c-dev' >> /etc/modules
 fi
@@ -60,7 +60,7 @@ else
   echo 'dtparam=i2c1=on' >> /boot/config.txt
 fi
 if grep -q '^dtparam=i2c_arm=on' /boot/config.txt; then
-  echo '5 - Seems i2c_arm parameter already set, skip this step.'
+  echo 'Seems i2c_arm parameter already set, skip this step.'
 else
   echo 'dtparam=i2c_arm=on' >> /boot/config.txt
 fi
@@ -68,17 +68,17 @@ fi
 # enable 1-Wire on Raspberry Pi
 echo '>>> Enable 1-Wire'
 if grep -q '^w1_gpio' /etc/modules; then
-  echo '2 - Seems w1_gpio module already exists, skip this step.'
+  echo 'Seems w1_gpio module already exists, skip this step.'
 else
   echo 'w1_gpio' >> /etc/modules
 fi
 if grep -q '^w1_therm' /etc/modules; then
-  echo '3 - Seems w1_therm module already exists, skip this step.'
+  echo 'Seems w1_therm module already exists, skip this step.'
 else
   echo 'w1_therm' >> /etc/modules
 fi
 if grep -q '^dtoverlay=w1-gpio' /boot/config.txt; then
-  echo '4 - Seems w1-gpio parameter already set, skip this step.'
+  echo 'Seems w1-gpio parameter already set, skip this step.'
 else
   echo 'dtoverlay=w1-gpio,gpiopin='$w1gpio >> /boot/config.txt
 fi
@@ -107,12 +107,12 @@ else
   fi
 fi
 
-# Enable Wifi
+echo '>>> Enable Wifi'
 sudo rfkill unblock all
 
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 if grep -q 'net.ifnames=0' /boot/cmdline.txt; then
-    echo '6 - Seems net.ifnames=0 parameter already set, skip this step.'
+    echo 'Seems net.ifnames=0 parameter already set, skip this step.'
 else
     sed -i '1s/$/ net.ifnames=0/' /boot/cmdline.txt
 fi
@@ -175,7 +175,7 @@ dpkg-reconfigure -f noninteractive ntp
 # rpi-scripts
 echo '>>> Install software for measurement python scripts'
 apt-get install -y python3-rpi.gpio python3-smbus python3-setuptools python3-pip libatlas-base-dev libgpiod2
-pip3 install -r requirements.txt --upgrade
+pip3 install -r requirements.txt --upgrade --install-option="--force-pi"
 
 # required since version v1.3.7
 echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
@@ -229,6 +229,13 @@ else
   chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
+
+echo '>>> Disabling WiFi Power Saving mode in Raspberry 3'
+if grep -q '^wireless-power off' /etc/network/interfaces; then
+  echo 'Seems wireless-power off module already exists, skip this step.'
+else
+  echo 'wireless-power off' >> /etc/network/interfaces
+fi
 
 # Autostart
 #echo '>>> Put Measurement Script into Autostart'
