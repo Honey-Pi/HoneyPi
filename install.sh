@@ -173,8 +173,10 @@ apt-get -y install --no-install-recommends ntp
 dpkg-reconfigure -f noninteractive ntp
 
 # rpi-scripts
+echo '>>> Install NumPy for measurement python scripts'
+apt-get -y install --no-install-recommends python3-numpy
 echo '>>> Install apt-get packages for measurement python scripts'
-apt-get -y install --no-install-recommends python3-rpi.gpio python3-smbus python3-setuptools python3-pip libatlas-base-dev libgpiod2
+apt-get -y install --no-install-recommends python3-rpi.gpio python3-smbus libatlas3-base python3-setuptools python3-pip libatlas-base-dev libgpiod2
 echo '>>> Install pip3 libraries for measurement python scripts'
 pip3 install -r requirements.txt --upgrade
 echo '>>> Install deprecated DHT library for measurement python scripts (still used for Zero)'
