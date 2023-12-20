@@ -169,12 +169,12 @@ bash -c "echo 'HoneyPi' > /etc/hostname"
 
 # Install NTP for time synchronisation with wittyPi
 echo '>>> Install NTP for time synchronisation with wittyPi'
-apt-get install -y ntp
+apt-get -y install --no-install-recommends ntp
 dpkg-reconfigure -f noninteractive ntp
 
 # rpi-scripts
 echo '>>> Install apt-get packages for measurement python scripts'
-apt-get install -y python3-rpi.gpio python3-smbus python3-setuptools python3-pip libatlas-base-dev libgpiod2
+apt-get -y install --no-install-recommends python3-rpi.gpio python3-smbus python3-setuptools python3-pip libatlas-base-dev libgpiod2
 echo '>>> Install pip3 libraries for measurement python scripts'
 pip3 install -r requirements.txt --upgrade
 echo '>>> Install deprecated DHT library for measurement python scripts (still used for Zero)'
@@ -182,11 +182,11 @@ pip3 install Adafruit_DHT --install-option="--force-pi" # deprecated, but still 
 
 # required since version v1.3.7
 echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
-apt-get -y install libopenjp2-7 libtiff5 python3-psutil
+apt-get -y install --no-install-recommends libopenjp2-7 libtiff5 python3-psutil
 
 # rpi-webinterface
 echo '>>> Install software for Webinterface'
-apt-get install -y lighttpd php-cgi
+apt-get -y install --no-install-recommends lighttpd php-cgi
 lighttpd-enable-mod fastcgi fastcgi-php
 cp overlays/lighttpd.conf /etc/lighttpd/lighttpd.conf
 chmod -R 644 /etc/lighttpd/lighttpd.conf
@@ -206,7 +206,7 @@ fi
 
 # Install software for surfstick
 echo '>>> Install software for Surfsticks'
-apt-get install -y wvdial usb-modeswitch usb-modeswitch-data
+apt-get -y install --no-install-recommends wvdial usb-modeswitch usb-modeswitch-data
 cp overlays/wvdial.conf /etc/wvdial.conf
 cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
@@ -262,7 +262,7 @@ systemctl enable honeypi.service
 
 # AccessPoint
 echo '>>> Set Up Raspberry Pi as Access Point'
-apt-get install -y dnsmasq hostapd
+apt-get -y install --no-install-recommends dnsmasq hostapd
 systemctl disable dnsmasq
 systemctl disable hostapd || (systemctl unmask hostapd && systemctl disable hostapd)
 systemctl stop dnsmasq
