@@ -4,7 +4,6 @@ wheel
 numpy
 #smbus # replaced by smbus2
 bme680
-Adafruit_DHT # deprecated, but still used for Pi Zero WH because of known issues such as https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/73 - no longer working on bullseye
 adafruit-circuitpython-dht # latest DHT library
 Pillow # required since version v1.3.7, fixed version due to piwheels error on zero (==8.4.0), fixed in the meantime
 ds18b20 # required since version v1.3.7

@@ -173,9 +173,12 @@ apt-get install -y ntp
 dpkg-reconfigure -f noninteractive ntp
 
 # rpi-scripts
-echo '>>> Install software for measurement python scripts'
+echo '>>> Install apt-get packages for measurement python scripts'
 apt-get install -y python3-rpi.gpio python3-smbus python3-setuptools python3-pip libatlas-base-dev libgpiod2
-pip3 install -r requirements.txt --upgrade --install-option="--force-pi"
+echo '>>> Install pip3 libraries for measurement python scripts'
+pip3 install -r requirements.txt --upgrade
+echo '>>> Install deprecated DHT library for measurement python scripts (still used for Zero)'
+pip3 install Adafruit_DHT --install-option="--force-pi" # deprecated, but still used for Pi Zero WH because of known issues such as https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/73 - no longer working on bullseye
 
 # required since version v1.3.7
 echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
