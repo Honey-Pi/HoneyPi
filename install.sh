@@ -237,12 +237,12 @@ else
 fi
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
 
-echo '>>> Disabling WiFi Power Saving mode in Raspberry 3'
-if grep -q '^wireless-power off' /etc/network/interfaces; then
-  echo 'Seems wireless-power off module already exists, skip this step.'
-else
-  echo 'wireless-power off' >> /etc/network/interfaces
-fi
+#echo '>>> Disabling WiFi Power Saving mode in Raspberry 3'
+#if grep -q '^wireless-power off' /etc/network/interfaces; then
+#  echo 'Seems wireless-power off module already exists, skip this step.'
+#else
+#  echo 'wireless-power off' >> /etc/network/interfaces
+#fi
 
 # Autostart
 #echo '>>> Put Measurement Script into Autostart'
