@@ -181,8 +181,10 @@ echo '>>> Install pip3 libraries for measurement python scripts'
 pip3 install -r requirements.txt --upgrade
 echo '>>> Install deprecated DHT library for measurement python scripts (still used for read_dht_zero.py)'
 # deprecated, but still used for Pi Zero WH because of known issues such as https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/73 - no longer working on bullseye
-pip3 install Adafruit_Python_DHT
+python3 -m pip install --upgrade pip setuptools wheel
 pip3 install Adafruit_DHT
+pip3 install Adafruit_Python_DHT
+
 
 # required since version v1.3.7
 echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
@@ -236,13 +238,6 @@ else
   chmod +x /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
-
-#echo '>>> Disabling WiFi Power Saving mode in Raspberry 3'
-#if grep -q '^wireless-power off' /etc/network/interfaces; then
-#  echo 'Seems wireless-power off module already exists, skip this step.'
-#else
-#  echo 'wireless-power off' >> /etc/network/interfaces
-#fi
 
 # Autostart
 #echo '>>> Put Measurement Script into Autostart'
