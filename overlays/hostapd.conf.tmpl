@@ -2,7 +2,7 @@
 
 # Schnittstelle und Treiber
 interface=uap0
-#driver=nl80211
+driver=nl80211
 
 # WLAN-Konfiguration
 ssid=HoneyPi
@@ -12,8 +12,7 @@ ieee80211n=1
 ieee80211d=1
 country_code=DE
 wmm_enabled=1
-
-#macaddr_acl=0
+macaddr_acl=0
 
 # WLAN-Verschlüsselung
 auth_algs=1
@@ -21,7 +20,4 @@ wpa=2
 wpa_key_mgmt=WPA-PSK
 rsn_pairwise=CCMP
 wpa_passphrase=HoneyPi!
-
-# wpa_pairwise=TKIP CCMP
-# ignore_broadcast_ssid=0
-
+ignore_broadcast_ssid=0

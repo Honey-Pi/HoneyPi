@@ -19,7 +19,7 @@ sudo sh install.sh
 
 ### Quick start
 
-Instead of installing you can simply download a ready HoneyPi image from our [download page](https://www.honey-pi.de/downloads/). You can even create your own custom HoneyPi images using our [HoneyPi image generator](https://github.com/Honey-Pi/HoneyPi-Build-Raspbian). These images are based on the latest Raspberry Pi OS Lite (previously known as raspbian lite) version.
+Instead of installing you can simply download a ready HoneyPi image from our [download page](https://www.honey-pi.de/downloads/). You can even create your own custom HoneyPi images using our [HoneyPi image generator](https://github.com/Honey-Pi/HoneyPi-Build-Raspbian). These images are based on the latest Raspberry Pi OS Lite version.
 
 
 ### First start on a clean [Raspberry Pi OS Lite](https://www.raspberrypi.org/software/operating-systems/)
@@ -50,7 +50,7 @@ sudo sh update.sh 0
 
 ## Start and Stop HoneyPi Service
 
-In previous versions (before v1.3.7) the measurement scripts have been autostarted after the booting of the Raspberry Pi (we used `/etc/rc.local`). There was no option to start/stop the measurement service. Only by pressing the hardware button the measurement routine stopped. But now we changed this behaviour. If you are connected by terminal you can start and stop the honeypi service on your Raspberry Pi. Don't forget to enable the service after you stopped for your next reboot. Also you can use the [webinterface backend](https://github.com/Honey-Pi/rpi-webinterface#backend) to remotely control your Raspberry Pi. 
+In previous versions (before v1.3.7) the measurement scripts have been autostarted after the booting of the Raspberry Pi (we used `/etc/rc.local`). There was no option to start/stop the measurement service. Only by pressing the hardware button the measurement routine stopped. But now we changed this behaviour. If you are connected by terminal you can start and stop the honeypi service on your Raspberry Pi. Don't forget to enable the service after you stopped for your next reboot. Also you can use the [webinterface backend](https://github.com/Honey-Pi/rpi-webinterface#backend) to remotely control your Raspberry Pi.
 
 ```
 # check status
