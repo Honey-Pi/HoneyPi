@@ -177,11 +177,13 @@ echo '>>> Install NumPy for measurement python scripts'
 apt-get -y install --no-install-recommends python3-numpy
 echo '>>> Install apt-get packages for measurement python scripts'
 apt-get -y install --no-install-recommends python3-rpi.gpio python3-smbus libatlas3-base python3-setuptools python3-pip libatlas-base-dev libgpiod2
+echo '>>> Upgrade pip to at least v22.3'
+python3 -m pip install --upgrade pip # upgrade pip to at least v22.3
 echo '>>> Install pip3 libraries for measurement python scripts'
 pip3 install -r requirements.txt --upgrade
 echo '>>> Install deprecated DHT library for measurement python scripts (still used for read_dht_zero.py)'
 # deprecated, but still used for Pi Zero WH because of known issues such as https://github.com/adafruit/Adafruit_CircuitPython_DHT/issues/73 - no longer working on bullseye
-python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install --upgrade pip setuptools wheel # see: https://stackoverflow.com/a/72934737/6696623
 pip3 install Adafruit_DHT
 pip3 install Adafruit_Python_DHT
 
