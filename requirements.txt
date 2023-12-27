@@ -1,9 +1,9 @@
-thingspeak==0.4.1
 setuptools
 wheel
+thingspeak==0.4.1 # fixed version because of changes that broke our scripts
 bme680
 adafruit-circuitpython-dht # latest DHT library
-Pillow # required since version v1.3.7, fixed version due to piwheels error on zero (==8.4.0), fixed in the meantime
+Pillow # required since version v1.3.7
 ds18b20 # required since version v1.3.7
 rak811 # required since version v1.3.7 - LoRaWAN module rak811
 smbus2 # required since version v1.3.7 - oled & wittypi
