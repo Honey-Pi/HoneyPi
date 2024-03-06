@@ -170,11 +170,19 @@ dpkg-reconfigure -f noninteractive ntp
 echo '>>> Apply a ntpd config'
 cp overlays/ntp.conf /etc/ntpsec/ntp.conf
 
+echo '>>> Apply Fix for "statistics directory /var/log/ntpsec/ does not exist or is unwriteable, error No such file or directory" message'
+mkdir /var/log/ntpsec/
+chown -R ntpsec:ntpsec /var/log/ntpsec/
+
 # rpi-scripts
 echo '>>> Install NumPy for measurement python scripts'
 apt-get -y install --no-install-recommends python3-numpy
 echo '>>> Install apt-get packages for measurement python scripts'
 apt-get -y install --no-install-recommends python3-rpi.gpio python3-smbus libatlas3-base python3-setuptools python3-pip libatlas-base-dev libgpiod2
+echo '>>> Set pip to --break-system-packages true because we dont want to use pip-venv or pipx' # because of --break-system-packages issue: https://askubuntu.com/q/1465218
+python3 -m pip config set global.break-system-packages true
+mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old
+export PIP_ROOT_USER_ACTION=ignore
 echo '>>> Upgrade pip to at least v22.3'
 python3 -m pip install --upgrade pip # upgrade pip to at least v22.3
 echo '>>> Install pip3 libraries for measurement python scripts'
