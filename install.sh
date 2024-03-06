@@ -152,11 +152,6 @@ else
     echo '>>> Info: This is not a Raspberry Zero, skip this step.'
 fi
 
-# Add a timeout for waiting for interfaces (in case no internet is connected)
-#mkdir -p /etc/systemd/system/networking.service.d/
-#bash -c 'echo -e "[Service]\nTimeoutStartSec=60sec" > /etc/systemd/system/networking.service.d/timeout.conf'
-#systemctl daemon-reload
-
 # Change timezone in Debian 9 (Stretch)
 echo '>>> Change Timezone to Berlin'
 ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
@@ -171,6 +166,9 @@ bash -c "echo 'HoneyPi' > /etc/hostname"
 echo '>>> Install NTP for time synchronisation with wittyPi'
 apt-get -y install --no-install-recommends ntp
 dpkg-reconfigure -f noninteractive ntp
+
+echo '>>> Apply a ntpd config'
+cp overlays/ntp.conf /etc/ntpsec/ntp.conf
 
 # rpi-scripts
 echo '>>> Install NumPy for measurement python scripts'
@@ -187,6 +185,11 @@ python3 -m pip install --upgrade pip setuptools wheel # see: https://stackoverfl
 pip3 install Adafruit_DHT
 pip3 install Adafruit_Python_DHT
 
+echo '>>> Install pip3 timezonefinder and numpy'
+pip3 uninstall --yes numpy
+apt-get -y remove python3-numpy
+pip3 install timezonefinder==6.1.8 --no-deps # required since version v1.3.7 - PA1010D (gps)
+pip3 install numpy # Required for ds18b20 and as a dependency for timezonefinder
 
 # required since version v1.3.7
 echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
@@ -220,14 +223,10 @@ cp overlays/wvdial.conf.tmpl /etc/wvdial.conf.tmpl
 chmod 755 /etc/wvdial.conf
 cp overlays/wvdial /etc/ppp/peers/wvdial
 
-#echo '>>> Put wvdial into Autostart'
-#if grep -q "connection.sh" /etc/rc.local; then
-#  echo 'Seems connection.sh already in rc.local, skip this step.'
-#else
-#  sed -i -e '$i \(sh '"$DIR"'/rpi-scripts/shell-scripts/connection.sh)&\n' /etc/rc.local
-#  chmod +x /etc/rc.local
-#  systemctl enable rc-local.service
-#fi
+echo '>>> Place a motd welcome screen'
+cp overlays/motd /etc/motd
+
+
 
 # wifi networks
 echo '>>> Setup Wifi Configuration'
@@ -241,15 +240,6 @@ else
 fi
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
 
-# Autostart
-#echo '>>> Put Measurement Script into Autostart'
-#if grep -q "$DIR/rpi-scripts/main.py" /etc/rc.local; then
-#  echo 'Seems measurement main.py already in rc.local, skip this step.'
-#else
-#  sed -i -e '$i \(sleep 2;python3 '"$DIR"'/rpi-scripts/main.py)&\n' /etc/rc.local
-#  chmod +x /etc/rc.local
-#  systemctl enable rc-local.service
-#fi
 echo '>>> Enable rc.local'
 chmod +x /etc/rc.local
 systemctl enable rc-local.service

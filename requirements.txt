@@ -9,4 +9,3 @@ rak811 # required since version v1.3.7 - LoRaWAN module rak811
 smbus2 # required since version v1.3.7 - oled & wittypi
 pytz # required since version v1.3.7 - wittypi & PA1010D
 pynmea2 # required since version v1.3.7 - PA1010D (gps)
-timezonefinder # required since version v1.3.7 - PA1010D (gps)
