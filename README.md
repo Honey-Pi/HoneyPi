@@ -44,7 +44,7 @@ Instead of installing you can simply download a ready HoneyPi image from our [do
 cd /home/pi/HoneyPi/
 # Update the Installer
 sudo git pull
-# Update the measurement scripts and the webinterface (Arg1 to select stable or pre-release,  for stable use 1 for betatest use 0)
+# Update the measurement scripts and the webinterface (Arg1: for stable use 1 for pre-release use 0)
 sudo sh update.sh 0
 ```
 
