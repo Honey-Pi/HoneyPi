@@ -84,6 +84,7 @@ else
     echo '>>> Something went wrong. Updating rpi-webinterface skiped.'
 fi
 
+
 # Create File with version information
 DATE=`date +%Y-%m-%d`
 echo "HoneyPi (last install on Raspi: $DATE)" > /var/www/html/version.txt

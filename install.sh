@@ -193,12 +193,13 @@ python3 -m pip install --upgrade pip setuptools wheel # see: https://stackoverfl
 pip3 install Adafruit_DHT
 pip3 install Adafruit_Python_DHT
 
-echo '>>> Install pip3 timezonefinder and numpy'
+echo '>>> Uninstall old numpy pip package - v1.4'
 pip3 uninstall --yes numpy
 apt-get -y remove python3-numpy
-pip3 install timezonefinder==6.1.8 --no-deps # required since version v1.3.7 - PA1010D (gps)
-pip3 install numpy # Required for ds18b20 and as a dependency for timezonefinder
-pip3 install h3 # Required as a dependency for timezonefinder
+echo '>>> Install pip3 timezonefinder and numpy - v1.3.7 - PA1010D (gps)'
+apt-get -y install --no-install-recommends libopenblas-dev
+pip3 install timezonefinder==6.1.8 # required since version v1.3.7 - PA1010D (gps)
+pip3 install numpy # Required for ds18b20
 
 # required since version v1.3.7
 echo '>>> Install software for v1.3.7 - packages used for oled display and python3-psutil is used to kill processes'
@@ -275,6 +276,11 @@ cp overlays/dnsmasq.conf /etc/dnsmasq.conf
 # Configuring the access point host software (hostapd)
 cp overlays/hostapd.conf.tmpl /etc/hostapd/hostapd.conf.tmpl
 cp overlays/hostapd /etc/default/hostapd
+
+# set folder permissions, somehow this line was necessary since Raspi OS bookworm
+echo '>>> Set file rights to /home/pi folder'
+chown -R pi:pi /home/pi
+chmod -R 755 /home/pi
 
 echo
 
