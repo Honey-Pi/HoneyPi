@@ -178,7 +178,7 @@ chown -R ntpsec:ntpsec /var/log/ntpsec/
 echo '>>> Install NumPy for measurement python scripts'
 apt-get -y install --no-install-recommends python3-numpy
 echo '>>> Install apt-get packages for measurement python scripts'
-apt-get -y install --no-install-recommends python3-rpi.gpio python3-smbus libatlas3-base python3-setuptools python3-pip libatlas-base-dev libgpiod2
+apt-get -y install --no-install-recommends python3-rpi-lgpio python3-smbus libatlas3-base python3-setuptools python3-pip libatlas-base-dev libgpiod2
 echo '>>> Set pip to --break-system-packages true because we dont want to use pip-venv or pipx' # because of --break-system-packages issue: https://askubuntu.com/q/1465218
 python3 -m pip config set global.break-system-packages true
 mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old
