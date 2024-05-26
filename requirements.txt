@@ -9,4 +9,4 @@ rak811 # required since version v1.3.7 - LoRaWAN module rak811
 smbus2 # required since version v1.3.7 - oled & wittypi
 pytz # required since version v1.3.7 - wittypi & PA1010D
 pynmea2 # required since version v1.3.7 - PA1010D (gps)
-rpi-lgpio # required since version v1.5.3 - replaces old RPi.GPIO for Bookworm
+#rpi-lgpio # This would replace old RPi.GPIO on Raspberry 5 (Bookworm)
