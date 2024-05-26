@@ -120,18 +120,28 @@ update_config_file "$CONFIG_PATH" 'core_freq=250' 'core_freq=250'
 log 'Enable HDMI safe mode'
 if grep -q '#hdmi_safe=1' "$CONFIG_PATH"; then
     sed -i 's/#hdmi_safe=1/hdmi_safe=1/' "$CONFIG_PATH"
-elif ! grep -q 'hdmi_safe=1' "$CONFIG_PATH"; then
+    log 'Updated hdmi_safe=1 from commented out to enabled in the config file.'
+elif grep -q 'hdmi_safe=1' "$CONFIG_PATH"; then
+    log 'HDMI safe mode already enabled, skipping.'
+else
     echo 'hdmi_safe=1' >> "$CONFIG_PATH"
+    log 'Added hdmi_safe=1 to the config file.'
 fi
+
 
 log 'Enable Wifi'
 rfkill unblock all
 
 # Enable Wifi-Stick on Raspberry Pi 1 & 2
 log 'Enable Wifi-Stick on Raspberry Pi 1 & 2'
+
 if ! grep -q 'net.ifnames=0' "$CMDLINE_PATH"; then
     sed -i '1s/$/ net.ifnames=0/' "$CMDLINE_PATH"
+    log 'Added net.ifnames=0 to the cmdline file.'
+else
+    log 'net.ifnames=0 already set, skipping.'
 fi
+
 
 # Code to run only on Raspberry Pi Zero
 log 'Configuring Raspberry Pi Zero specific settings'
@@ -170,16 +180,25 @@ echo 'HoneyPi' > /etc/hostname
 log 'Install NTP for time synchronization with wittyPi'
 apt-get -y install --no-install-recommends ntp
 dpkg-reconfigure -f noninteractive ntp
-cp overlays/ntp.conf /etc/ntpsec/ntp.conf
 log 'Apply fix for ntpd config'
 mkdir -p /var/log/ntpsec/
-chown -R ntpsec:ntpsec /var/log/ntpsec/
+mkdir -p /etc/ntpsec/
+cp overlays/ntp.conf /etc/ntpsec/ntp.conf
+
+
 
 # Install Python and system packages for measurement scripts
 log 'Install Python and system packages for measurement scripts'
 apt-get -y install --no-install-recommends python3-numpy python3-rpi.gpio python3-smbus libatlas3-base python3-setuptools python3-pip libatlas-base-dev libgpiod2
 python3 -m pip config set global.break-system-packages true
-mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old || true
+# Check if EXTERNALLY-MANAGED file exists before attempting to move it
+if [ -f /usr/lib/python3.11/EXTERNALLY-MANAGED ]; then
+    mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old
+    log 'Moved EXTERNALLY-MANAGED to EXTERNALLY-MANAGED.old'
+else
+    log 'EXTERNALLY-MANAGED file does not exist, skipping move.'
+fi
+
 export PIP_ROOT_USER_ACTION=ignore
 python3 -m pip install --upgrade pip
 pip3 install -r requirements.txt --upgrade
@@ -238,11 +257,17 @@ if ! grep -q 'network={' /etc/wpa_supplicant/wpa_supplicant.conf; then
 fi
 cp overlays/dhcpcd.conf /etc/dhcpcd.conf
 
-# Enable rc.local and HoneyPi Service
-log 'Enable rc.local and HoneyPi Service'
+# Enable rc.local
+log 'Enable rc.local'
 chmod +x /etc/rc.local
 systemctl enable rc-local.service
-sed -i '/(sleep 2;python3/c\#' /etc/rc.local # disable autostart in rc.local
+log "Uncomment autostart of honeypi in rc.local"
+if grep -q 'sleep 2;python3' /etc/rc.local; then
+    sed -i '/(sleep 2;python3/c\#' /etc/rc.local # disable autostart in rc.local
+fi
+
+# Enable honeypi.service
+log 'Enable honeypi.service'
 cp overlays/honeypi.service /lib/systemd/system/honeypi.service
 chmod 644 /lib/systemd/system/honeypi.service
 systemctl daemon-reload

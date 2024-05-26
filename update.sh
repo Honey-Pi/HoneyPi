@@ -56,8 +56,8 @@ install_scripts() {
             log "rpi-scripts does not exist, propably first fresh install."
         else
             [ -f "$DIR/rpi-scripts/error.log" ] && mv "$DIR/rpi-scripts/error.log" "$DIR/error.log.backup"
-            local current_datetime=$(date +%Y-%m-%d_%T)
-            mv "$DIR/rpi-scripts" "$DIR/rpi-scripts-$current_datetime"
+            #local current_datetime=$(date +%Y-%m-%d_%T)
+            #mv "$DIR/rpi-scripts" "$DIR/rpi-scripts-$current_datetime"
             rm -rf "$DIR/rpi-scripts" # remove folder to download latest
         fi
         log "Downloading latest rpi-scripts ($tag)"
