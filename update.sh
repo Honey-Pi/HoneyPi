@@ -118,6 +118,10 @@ run_post_upgrade_script() {
     local scripts_tag=$1
     local postupgradescript="$DIR/rpi-scripts/post-upgrade/post-upgrade.sh"
     log "Checking for existence of post-upgrade script in: $postupgradescript"
+    if [ ! -f "$postupgradescript" ]; then
+        postupgradescript="$DIR/rpi-scripts/$scripts_tag/post-upgrade.sh"
+    fi
+
     if [ -f "$postupgradescript" ]; then
         log 'Running post-upgrade script'
         "$postupgradescript"
