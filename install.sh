@@ -182,8 +182,7 @@ apt-get -y install --no-install-recommends ntp
 dpkg-reconfigure -f noninteractive ntp
 log 'Apply fix for ntpd config'
 mkdir -p /var/log/ntpsec/
-mkdir -p /etc/ntpsec/
-cp overlays/ntp.conf /etc/ntpsec/ntp.conf
+cp overlays/ntp.conf /etc/ntp.conf
 
 
 
